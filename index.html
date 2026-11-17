@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오늘 아침 브리핑 · 서울 날씨 · 환율 · S&P 500</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #191f28;
+      --sub: #6b7684;
+      --accent: #3182f6;
+      --border: #e5e8eb;
+      --warm: #fff5f0;
+      --warm-text: #d9531e;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 20px 16px 40px;
+    }
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 4px 4px 6px;
+    }
+    .date { font-size: 13px; color: var(--sub); font-weight: 500; }
+    h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+    .refresh-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .refresh-btn:active { opacity: 0.7; }
+    .card {
+      background: var(--card);
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .card-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--sub);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .weather-main {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+    .temp-big { font-size: 38px; font-weight: 800; letter-spacing: -0.03em; }
+    .weather-desc { font-size: 16px; font-weight: 600; color: var(--text); }
+    .weather-meta {
+      font-size: 13px;
+      color: var(--sub);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .outfit-box {
+      margin-top: 14px;
+      background: var(--warm);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    .outfit-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--warm-text);
+      margin-bottom: 4px;
+    }
+    .outfit-text { font-size: 14px; color: var(--text); font-weight: 500; }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+    .big-num { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
+    .sub-num { font-size: 13px; color: var(--sub); margin-top: 4px; }
+    .tv-wrap {
+      min-height: 110px;
+      overflow: hidden;
+    }
+    .ext-link {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--sub);
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <div class="date" id="today-date">불러오는 중...</div>
+        <h1>오늘 아침 브리핑</h1>
+      </div>
+      <button class="refresh-btn" onclick="loadAll()">새로고침</button>
+    </header>
+
+    <!-- 서울 날씨 + 옷차림 -->
+    <section class="card">
+      <div class="card-label">
+        <span>🌤️ 서울 날씨 · 옷차림</span>
+        <span id="weather-updated"></span>
+      </div>
+      <div class="weather-main">
+        <span class="temp-big" id="temp-now">--°</span>
+        <span class="weather-desc" id="weather-desc">불러오는 중</span>
+      </div>
+      <div class="weather-meta" id="weather-meta">
+        <span>최저/최고 확인 중...</span>
+      </div>
+      <div class="outfit-box">
+        <div class="outfit-title">🧥 오늘 추천 옷차림</div>
+        <div class="outfit-text" id="outfit-text">기온에 맞춰 옷차림을 고르고 있어요...</div>
+      </div>
+    </section>
+
+    <div class="grid-2">
+      <!-- 미국 환율 -->
+      <section class="card">
+        <div class="card-label">
+          <span>💵 미국 환율 (USD/KRW)</span>
+          <span id="fx-updated"></span>
+        </div>
+        <div class="big-num" id="usd-krw">불러오는 중...</div>
+        <div class="sub-num" id="fx-sub">1달러 기준 원화 환율</div>
+      </section>
+
+      <!-- S&P 500 -->
+      <section class="card">
+        <div class="card-label">
+          <span>📈 S&amp;P 500 지수</span>
+          <span>실시간 시세</span>
+        </div>
+        <div class="tv-wrap">
+          <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
+            {
+              "symbol": "SP:SPX",
+              "width": "100%",
+              "isTransparent": true,
+              "colorTheme": "light",
+              "locale": "kr"
+            }
+            </script>
+          </div>
+        </div>
+        <a class="ext-link" href="https://finance.yahoo.com/quote/%5EGSPC/" target="_blank" rel="noopener">야후 파이낸스에서 자세히 보기 →</a>
+      </section>
+    </div>
+
+    <footer>매일 아침 필요한 정보만 한눈에</footer>
+  </div>
+
+  <script>
+    function setTodayDate() {
+      const now = new Date();
+      const opts = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+      document.getElementById('today-date').textContent = now.toLocaleDateString('ko-KR', opts);
+    }
+
+    function recommendOutfit(temp, feelsLike, maxTemp, minTemp, rainProb) {
+      const t = feelsLike !== null ? feelsLike : temp;
+      let base = '';
+      if (t >= 28) base = '민소매·반팔·반바지 등 아주 가벼운 여름 옷차림';
+      else if (t >= 23) base = '반팔·얇은 셔츠·면바지·린넨 팬츠';
+      else if (t >= 20) base = '긴팔 티·얇은 가디건·면바지·슬랙스';
+      else if (t >= 17) base = '얇은 니트·맨투맨·가디건·청바지';
+      else if (t >= 12) base = '자켓·가디건·야상·니트와 청바지';
+      else if (t >= 9) base = '트렌치코트·야상·자켓 안에 니트/기모 이너';
+      else if (t >= 5) base = '울 코트·경량 패딩·히트텍·니트';
+      else base = '두꺼운 패딩·목도리·장갑 등 한파 대비 방한복';
+
+      const extras = [];
+      if (maxTemp - minTemp >= 9) extras.push('일교차가 커서 겉옷을 꼭 챙기세요');
+      if (rainProb >= 40) extras.push(`비 소식(강수확률 ${rainProb}%)이 있어 우산 챙기시는 게 좋아요`);
+      return extras.length ? `${base}. ${extras.join(', ')}.` : `${base}.`;
+    }
+
+    function translateWeather(desc) {
+      const d = (desc || '').toLowerCase();
+      if (d.includes('sunny') || d.includes('clear')) return '맑음 ☀️';
+      if (d.includes('partly cloudy')) return '구름 조금 ⛅';
+      if (d.includes('cloudy') || d.includes('overcast')) return '흐림 ☁️';
+      if (d.includes('rain') || d.includes('drizzle') || d.includes('shower')) return '비 🌧️';
+      if (d.includes('snow')) return '눈 ❄️';
+      if (d.includes('thunder')) return '뇌우 ⛈️';
+      if (d.includes('fog') || d.includes('mist')) return '안개 🌫️';
+      return desc;
+    }
+
+    async function loadWeather() {
+      try {
+        const res = await fetch('https://wttr.in/Seoul?format=j1');
+        const data = await res.json();
+        const cur = data.current_condition[0];
+        const today = data.weather[0];
+        const temp = Number(cur.temp_C);
+        const feels = Number(cur.FeelsLikeC);
+        const minT = Number(today.mintempC);
+        const maxT = Number(today.maxtempC);
+        const rainProb = Math.max(...today.hourly.map(h => Number(h.chanceofrain || 0)));
+        const desc = cur.weatherDesc?.[0]?.value || '';
+
+        document.getElementById('temp-now').textContent = `${temp}°`;
+        document.getElementById('weather-desc').textContent = translateWeather(desc);
+        document.getElementById('weather-meta').innerHTML =
+          `<span>체감 ${feels}°</span><span>최저 ${minT}° / 최고 ${maxT}°</span><span>강수확률 최대 ${rainProb}%</span>`;
+        document.getElementById('outfit-text').textContent = recommendOutfit(temp, feels, maxT, minT, rainProb);
+        document.getElementById('weather-updated').textContent = cur.localObsDateTime ? cur.localObsDateTime.slice(11, 16) + ' 기준' : '';
+      } catch (e) {
+        document.getElementById('weather-desc').textContent = '날씨를 불러오지 못했어요';
+        document.getElementById('outfit-text').textContent = '잠시 후 새로고침해 주세요.';
+      }
+    }
+
+    async function loadFX() {
+      try {
+        const res = await fetch('https://open.er-api.com/v6/latest/USD');
+        const data = await res.json();
+        const krw = data.rates?.KRW;
+        if (krw) {
+          document.getElementById('usd-krw').textContent = `${krw.toLocaleString('ko-KR', { maximumFractionDigits: 2 })}원`;
+          const updated = new Date(data.time_last_update_utc);
+          document.getElementById('fx-updated').textContent = updated.toLocaleDateString('ko-KR');
+        }
+      } catch (e) {
+        document.getElementById('usd-krw').textContent = '불러오기 실패';
+      }
+    }
+
+    function loadAll() {
+      setTodayDate();
+      loadWeather();
+      loadFX();
+    }
+
+    loadAll();
+  </script>
+</body>
+</html>
