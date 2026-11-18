@@ -3,188 +3,397 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#03C75A" />
+  <meta name="description" content="서울 날씨·옷차림, 미국 환율, S&P 500을 매일 아침 한눈에 보는 브리핑 페이지" />
   <title>오늘 아침 브리핑 · 서울 날씨 · 환율 · S&P 500</title>
   <style>
     :root {
-      --bg: #f6f7fb;
-      --card: #ffffff;
-      --text: #191f28;
-      --sub: #6b7684;
-      --accent: #3182f6;
-      --border: #e5e8eb;
-      --warm: #fff5f0;
-      --warm-text: #d9531e;
+      /* NAVER-inspired palette */
+      --green: #03C75A;
+      --green-hover: #02B350;
+      --green-dark: #009F47;
+      --green-soft: #EAFBF1;
+      --green-soft-2: #F2FCF6;
+      --bg: #F4F6F8;
+      --card: #FFFFFF;
+      --text: #1E1E23;
+      --sub: #767678;
+      --border: #E5E8EB;
+      --line: #EFF1F3;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --shadow: 0 1px 2px rgba(20, 25, 40, 0.04), 0 10px 24px -18px rgba(20, 25, 40, 0.35);
+      --shadow-hover: 0 2px 4px rgba(20, 25, 40, 0.05), 0 16px 32px -20px rgba(20, 25, 40, 0.40);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif;
+      font-family: "Apple SD Gothic Neo", -apple-system, BlinkMacSystemFont, "Malgun Gothic",
+                   "Pretendard", "Noto Sans KR", "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.5;
-      padding: 20px 16px 40px;
+      line-height: 1.55;
+      padding: 0 0 48px;
+      -webkit-font-smoothing: antialiased;
     }
-    .container {
-      max-width: 480px;
+    a { color: inherit; }
+
+    /* ---------- top accent bar ---------- */
+    .top-accent { height: 3px; background: linear-gradient(90deg, var(--green) 0%, #35D983 50%, var(--green-dark) 100%); }
+
+    /* ---------- header ---------- */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: saturate(180%) blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+    .site-header__inner {
+      max-width: 720px;
       margin: 0 auto;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .brand__mark {
+      width: 30px; height: 30px;
+      flex: 0 0 auto;
+      border-radius: 9px;
+      background: var(--green);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 10px -4px rgba(3, 199, 90, 0.65);
+      letter-spacing: -0.04em;
+    }
+    .brand__text { display: flex; flex-direction: column; min-width: 0; }
+    .brand__name { font-size: 16px; font-weight: 800; letter-spacing: -0.03em; white-space: nowrap; }
+    .brand__name em { font-style: normal; color: var(--green-dark); }
+    .brand__date { font-size: 12px; color: var(--sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .refresh-btn {
+      flex: 0 0 auto;
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--green);
+      border: 0;
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+      box-shadow: 0 4px 12px -6px rgba(3, 199, 90, 0.8);
+    }
+    .refresh-btn:hover { background: var(--green-hover); }
+    .refresh-btn:active { background: var(--green-dark); transform: scale(0.98); }
+    .refresh-btn svg { width: 14px; height: 14px; }
+    .refresh-btn.is-loading svg { animation: spin 0.9s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ---------- layout ---------- */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 18px 16px 0;
       display: flex;
       flex-direction: column;
       gap: 14px;
     }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      padding: 4px 4px 6px;
+
+    /* ---------- hero ---------- */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(120% 140% at 100% 0%, rgba(3, 199, 90, 0.16) 0%, rgba(3, 199, 90, 0) 58%),
+        linear-gradient(180deg, #FFFFFF 0%, #F7FFFA 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 18px 18px;
+      box-shadow: var(--shadow);
     }
-    .date { font-size: 13px; color: var(--sub); font-weight: 500; }
-    h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
-    .refresh-btn {
-      background: var(--card);
+    .hero__eyebrow {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--green-soft);
+      color: var(--green-dark);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      padding: 5px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+    .hero__eyebrow::before {
+      content: "";
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+    }
+    .hero__title { font-size: 21px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.35; }
+    .hero__title strong { color: var(--green-dark); }
+    .hero__desc { margin-top: 6px; font-size: 13.5px; color: var(--sub); }
+    .hero__stats { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .stat-pill {
+      display: inline-flex; align-items: baseline; gap: 6px;
+      background: #fff;
       border: 1px solid var(--border);
       border-radius: 999px;
-      padding: 6px 12px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      cursor: pointer;
+      padding: 7px 12px;
+      font-size: 12.5px;
+      color: var(--sub);
+      box-shadow: 0 1px 2px rgba(20, 25, 40, 0.03);
     }
-    .refresh-btn:active { opacity: 0.7; }
+    .stat-pill b { font-size: 13.5px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+
+    /* ---------- section titles ---------- */
+    .section { display: flex; flex-direction: column; gap: 10px; }
+    .section__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 2px; }
+    .section__title {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 14.5px; font-weight: 800; letter-spacing: -0.02em;
+    }
+    .section__title .tag {
+      font-size: 11px; font-weight: 800; color: #fff;
+      background: var(--green);
+      border-radius: 6px;
+      padding: 2px 6px;
+      letter-spacing: 0;
+    }
+    .section__meta { font-size: 12px; color: var(--sub); }
+
+    /* ---------- cards ---------- */
     .card {
       background: var(--card);
-      border-radius: 18px;
-      padding: 18px;
       border: 1px solid var(--border);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.18s ease, transform 0.18s ease;
     }
+    .card:hover { box-shadow: var(--shadow-hover); }
     .card-label {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--sub);
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      font-size: 13px; font-weight: 700; color: var(--text);
+      margin-bottom: 10px;
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
     }
-    .weather-main {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      margin-bottom: 6px;
+    .card-label .pill {
+      font-size: 11px; font-weight: 700; color: var(--green-dark);
+      background: var(--green-soft);
+      border-radius: 999px;
+      padding: 3px 9px;
+      white-space: nowrap;
     }
-    .temp-big { font-size: 38px; font-weight: 800; letter-spacing: -0.03em; }
-    .weather-desc { font-size: 16px; font-weight: 600; color: var(--text); }
-    .weather-meta {
-      font-size: 13px;
-      color: var(--sub);
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
+    .card-label .muted { font-size: 11.5px; font-weight: 600; color: var(--sub); white-space: nowrap; }
+
+    /* weather */
+    .weather-main { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+    .temp-big { font-size: 40px; font-weight: 800; letter-spacing: -0.045em; line-height: 1.1; }
+    .weather-desc { font-size: 15px; font-weight: 700; color: var(--text); }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .chip {
+      font-size: 12px; font-weight: 600; color: var(--text);
+      background: #F7F8FA;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 5px 9px;
     }
+    .chip span { color: var(--sub); font-weight: 600; margin-right: 4px; }
     .outfit-box {
       margin-top: 14px;
-      background: var(--warm);
-      border-radius: 12px;
-      padding: 12px 14px;
+      background: var(--green-soft-2);
+      border: 1px solid #D8F5E4;
+      border-radius: var(--radius-md);
+      padding: 13px 14px;
     }
     .outfit-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--warm-text);
-      margin-bottom: 4px;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12.5px; font-weight: 800; color: var(--green-dark);
+      margin-bottom: 5px;
     }
-    .outfit-text { font-size: 14px; color: var(--text); font-weight: 500; }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-    .big-num { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
-    .sub-num { font-size: 13px; color: var(--sub); margin-top: 4px; }
-    .tv-wrap {
-      min-height: 110px;
-      overflow: hidden;
-    }
+    .outfit-text { font-size: 14px; color: var(--text); font-weight: 600; line-height: 1.55; }
+
+    /* numbers */
+    .big-num { font-size: 30px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.25; }
+    .big-num .unit { font-size: 16px; font-weight: 700; color: var(--sub); margin-left: 2px; }
+    .sub-num { font-size: 12.5px; color: var(--sub); margin-top: 6px; }
+    .divider { height: 1px; background: var(--line); margin: 14px 0 12px; }
+    .kv { display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; color: var(--sub); }
+    .kv b { color: var(--text); font-weight: 700; }
+
+    /* grid */
+    .grid-2 { display: grid; grid-template-columns: 1fr; gap: 14px; }
+
+    /* tradingview */
+    .tv-wrap { min-height: 120px; overflow: hidden; border-radius: var(--radius-sm); }
     .ext-link {
-      display: inline-block;
-      margin-top: 8px;
-      font-size: 12px;
-      color: var(--accent);
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-top: 10px;
+      font-size: 12.5px;
+      color: var(--green-dark);
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 700;
     }
+    .ext-link:hover { color: var(--green-hover); text-decoration: underline; }
+
     footer {
       text-align: center;
       font-size: 12px;
       color: var(--sub);
-      margin-top: 6px;
+      margin-top: 10px;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    footer .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); display: inline-block; }
+    footer .foot-brand { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; color: var(--text); }
+
+    /* skeleton shimmer */
+    .loading { color: var(--sub); }
+    .skeleton {
+      display: inline-block;
+      height: 1em; min-width: 64px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #EEF1F3 25%, #F6F8F9 37%, #EEF1F3 63%);
+      background-size: 400% 100%;
+      animation: shimmer 1.4s ease infinite;
+      vertical-align: middle;
+    }
+    @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
+
+    @media (min-width: 560px) {
+      .container { padding: 22px 20px 0; gap: 16px; }
+      .grid-2 { grid-template-columns: 1fr 1fr; }
+      .hero__title { font-size: 23px; }
+      .temp-big { font-size: 44px; }
+      .big-num { font-size: 32px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div>
-        <div class="date" id="today-date">불러오는 중...</div>
-        <h1>오늘 아침 브리핑</h1>
+  <div class="top-accent"></div>
+
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="brand">
+        <div class="brand__mark" aria-hidden="true">오</div>
+        <div class="brand__text">
+          <div class="brand__name">오늘 <em>아침 브리핑</em></div>
+          <div class="brand__date" id="today-date">불러오는 중…</div>
+        </div>
       </div>
-      <button class="refresh-btn" onclick="loadAll()">새로고침</button>
-    </header>
+      <button class="refresh-btn" id="refresh-btn" onclick="loadAll()" aria-label="정보 새로고침">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12a9 9 0 1 1-3.2-6.9" />
+          <path d="M21 3v6h-6" />
+        </svg>
+        <span>새로고침</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- 히어로 요약 -->
+    <section class="hero" aria-label="오늘의 요약">
+      <div class="hero__eyebrow">오늘의 브리핑</div>
+      <h1 class="hero__title">
+        아침에 필요한 세 가지,<br />
+        <strong>날씨 · 환율 · 증시</strong>를 한눈에
+      </h1>
+      <p class="hero__desc">서울 기준 오늘 날씨와 옷차림, 미국 환율, S&amp;P 500 지수를 매일 아침 정리해 드려요.</p>
+      <div class="hero__stats" id="hero-stats">
+        <span class="stat-pill">서울 <b id="hero-temp">—</b></span>
+        <span class="stat-pill">USD/KRW <b id="hero-fx">—</b></span>
+        <span class="stat-pill">S&amp;P 500 <b id="hero-spx">실시간</b></span>
+      </div>
+    </section>
 
     <!-- 서울 날씨 + 옷차림 -->
-    <section class="card">
-      <div class="card-label">
-        <span>🌤️ 서울 날씨 · 옷차림</span>
-        <span id="weather-updated"></span>
+    <section class="section">
+      <div class="section__head">
+        <h2 class="section__title"><span class="tag">날씨</span> 서울 날씨 · 옷차림</h2>
+        <span class="section__meta" id="weather-updated"></span>
       </div>
-      <div class="weather-main">
-        <span class="temp-big" id="temp-now">--°</span>
-        <span class="weather-desc" id="weather-desc">불러오는 중</span>
-      </div>
-      <div class="weather-meta" id="weather-meta">
-        <span>최저/최고 확인 중...</span>
-      </div>
-      <div class="outfit-box">
-        <div class="outfit-title">🧥 오늘 추천 옷차림</div>
-        <div class="outfit-text" id="outfit-text">기온에 맞춰 옷차림을 고르고 있어요...</div>
-      </div>
+      <article class="card">
+        <div class="card-label">
+          <span>지금 서울</span>
+          <span class="pill" id="weather-badge">확인 중</span>
+        </div>
+        <div class="weather-main">
+          <span class="temp-big" id="temp-now">—</span>
+          <span class="weather-desc" id="weather-desc">불러오는 중</span>
+        </div>
+        <div class="chip-row" id="weather-meta">
+          <span class="chip loading">최저/최고 확인 중…</span>
+        </div>
+        <div class="outfit-box">
+          <div class="outfit-title">🧥 오늘 추천 옷차림</div>
+          <div class="outfit-text" id="outfit-text">기온에 맞춰 옷차림을 고르고 있어요…</div>
+        </div>
+      </article>
     </section>
 
     <div class="grid-2">
       <!-- 미국 환율 -->
-      <section class="card">
-        <div class="card-label">
-          <span>💵 미국 환율 (USD/KRW)</span>
-          <span id="fx-updated"></span>
+      <section class="section">
+        <div class="section__head">
+          <h2 class="section__title"><span class="tag">환율</span> 미국 환율</h2>
+          <span class="section__meta" id="fx-updated"></span>
         </div>
-        <div class="big-num" id="usd-krw">불러오는 중...</div>
-        <div class="sub-num" id="fx-sub">1달러 기준 원화 환율</div>
+        <article class="card">
+          <div class="card-label">
+            <span>USD / KRW</span>
+            <span class="muted">1달러 기준</span>
+          </div>
+          <div class="big-num" id="usd-krw">불러오는 중…</div>
+          <div class="sub-num" id="fx-sub">원화 환율 · 하루 한 번 업데이트</div>
+          <div class="divider"></div>
+          <div class="kv"><span>기준 통화</span><b>미국 달러 (USD)</b></div>
+          <div class="kv" style="margin-top:6px;"><span>표시 통화</span><b>대한민국 원 (KRW)</b></div>
+        </article>
       </section>
 
       <!-- S&P 500 -->
-      <section class="card">
-        <div class="card-label">
-          <span>📈 S&amp;P 500 지수</span>
-          <span>실시간 시세</span>
+      <section class="section">
+        <div class="section__head">
+          <h2 class="section__title"><span class="tag">증시</span> S&amp;P 500</h2>
+          <span class="section__meta">실시간 시세</span>
         </div>
-        <div class="tv-wrap">
-          <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
-            {
-              "symbol": "SP:SPX",
-              "width": "100%",
-              "isTransparent": true,
-              "colorTheme": "light",
-              "locale": "kr"
-            }
-            </script>
+        <article class="card">
+          <div class="card-label">
+            <span>S&amp;P 500 지수</span>
+            <span class="muted">SPX</span>
           </div>
-        </div>
-        <a class="ext-link" href="https://finance.yahoo.com/quote/%5EGSPC/" target="_blank" rel="noopener">야후 파이낸스에서 자세히 보기 →</a>
+          <div class="tv-wrap">
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+              <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
+              {
+                "symbol": "SP:SPX",
+                "width": "100%",
+                "isTransparent": true,
+                "colorTheme": "light",
+                "locale": "kr"
+              }
+              </script>
+            </div>
+          </div>
+          <a class="ext-link" href="https://finance.yahoo.com/quote/%5EGSPC/" target="_blank" rel="noopener">야후 파이낸스에서 자세히 보기 →</a>
+        </article>
       </section>
     </div>
 
-    <footer>매일 아침 필요한 정보만 한눈에</footer>
+    <footer>
+      <span class="foot-brand"><span class="dot"></span> 오늘 아침 브리핑</span>
+      <span>날씨 wttr.in · 환율 open.er-api · 지수 TradingView</span>
+    </footer>
   </div>
 
   <script>
@@ -239,13 +448,19 @@
 
         document.getElementById('temp-now').textContent = `${temp}°`;
         document.getElementById('weather-desc').textContent = translateWeather(desc);
+        document.getElementById('weather-badge').textContent = `${minT}° / ${maxT}°`;
         document.getElementById('weather-meta').innerHTML =
-          `<span>체감 ${feels}°</span><span>최저 ${minT}° / 최고 ${maxT}°</span><span>강수확률 최대 ${rainProb}%</span>`;
+          `<span class="chip"><span>체감</span>${feels}°</span>` +
+          `<span class="chip"><span>최저/최고</span>${minT}° / ${maxT}°</span>` +
+          `<span class="chip"><span>강수확률</span>최대 ${rainProb}%</span>`;
         document.getElementById('outfit-text').textContent = recommendOutfit(temp, feels, maxT, minT, rainProb);
-        document.getElementById('weather-updated').textContent = cur.localObsDateTime ? cur.localObsDateTime.slice(11, 16) + ' 기준' : '';
+        document.getElementById('weather-updated').textContent =
+          cur.localObsDateTime ? cur.localObsDateTime.slice(11, 16) + ' 기준' : '';
+        document.getElementById('hero-temp').textContent = `${temp}°`;
       } catch (e) {
         document.getElementById('weather-desc').textContent = '날씨를 불러오지 못했어요';
         document.getElementById('outfit-text').textContent = '잠시 후 새로고침해 주세요.';
+        document.getElementById('weather-badge').textContent = '오류';
       }
     }
 
@@ -255,19 +470,27 @@
         const data = await res.json();
         const krw = data.rates?.KRW;
         if (krw) {
-          document.getElementById('usd-krw').textContent = `${krw.toLocaleString('ko-KR', { maximumFractionDigits: 2 })}원`;
+          const txt = krw.toLocaleString('ko-KR', { maximumFractionDigits: 2 });
+          document.getElementById('usd-krw').innerHTML = `${txt}<span class="unit">원</span>`;
           const updated = new Date(data.time_last_update_utc);
-          document.getElementById('fx-updated').textContent = updated.toLocaleDateString('ko-KR');
+          document.getElementById('fx-updated').textContent =
+            updated.toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' }) + ' 기준';
+          document.getElementById('hero-fx').textContent = `${txt}원`;
+          document.getElementById('fx-sub').textContent = '원화 환율 · 하루 한 번 업데이트';
         }
       } catch (e) {
         document.getElementById('usd-krw').textContent = '불러오기 실패';
+        document.getElementById('fx-sub').textContent = '잠시 후 새로고침해 주세요.';
       }
     }
 
     function loadAll() {
+      const btn = document.getElementById('refresh-btn');
+      btn.classList.add('is-loading');
       setTodayDate();
-      loadWeather();
-      loadFX();
+      Promise.allSettled([loadWeather(), loadFX()]).then(() => {
+        setTimeout(() => btn.classList.remove('is-loading'), 400);
+      });
     }
 
     loadAll();
