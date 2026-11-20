@@ -689,26 +689,49 @@ joyEl.addEventListener('pointerleave', function(e){
    8. Audio
    ========================================================= */
 var AC = null;
+var audioUnlocked = false;
 function audioInit(){
-  if (AC){
-    if (AC.state === 'suspended' && AC.resume) { try { AC.resume(); } catch(e){} }
-    return;
+  try {
+    if (navigator.audioSession && navigator.audioSession.type !== 'playback') {
+      navigator.audioSession.type = 'playback';
+    }
+  } catch(e){}
+  if (!AC){
+    var C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return;
+    try { AC = new C(); } catch(e){ AC = null; return; }
   }
-  var C = window.AudioContext || window.webkitAudioContext;
-  if (!C) return;
-  try { AC = new C(); } catch(e){ AC = null; }
+  if (AC.state === 'suspended' && AC.resume){
+    try { AC.resume(); } catch(e){}
+  }
+  if (!audioUnlocked && AC){
+    try {
+      var buf = AC.createBuffer(1, 1, 22050);
+      var src = AC.createBufferSource();
+      src.buffer = buf;
+      src.connect(AC.destination);
+      src.start(0);
+      audioUnlocked = true;
+    } catch(e){}
+  }
 }
 function tone(freq, dur, type, vol, slideTo, delay){
-  if (state.muted || !AC) return;
+  if (state.muted) return;
+  if (!AC) audioInit();
+  if (!AC) return;
+  if (AC.state === 'suspended' && AC.resume){
+    try { AC.resume(); } catch(e){}
+  }
   try {
     var t0 = AC.currentTime + (delay || 0);
     var o = AC.createOscillator();
     var g = AC.createGain();
+    var peak = Math.min(0.45, (vol || 0.08) * 2.4);
     o.type = type || 'sine';
     o.frequency.setValueAtTime(freq, t0);
     if (slideTo) o.frequency.exponentialRampToValueAtTime(Math.max(28, slideTo), t0 + dur);
     g.gain.setValueAtTime(0.0001, t0);
-    g.gain.exponentialRampToValueAtTime(vol || 0.08, t0 + 0.014);
+    g.gain.exponentialRampToValueAtTime(peak, t0 + 0.014);
     g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
     o.connect(g);
     g.connect(AC.destination);
@@ -2988,6 +3011,10 @@ function bindUI(){
   document.addEventListener('gesturestart', function(e){ if (e.preventDefault) e.preventDefault(); });
   document.addEventListener('dblclick', function(e){ if (e.preventDefault) e.preventDefault(); }, { passive:false });
   window.addEventListener('pointerdown', function(){ audioInit(); });
+  window.addEventListener('touchstart', function(){ audioInit(); }, { passive:true });
+  window.addEventListener('touchend', function(){ audioInit(); }, { passive:true });
+  window.addEventListener('click', function(){ audioInit(); });
+  window.addEventListener('keydown', function(){ audioInit(); });
 }
 
 function startGame(){
