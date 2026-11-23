@@ -1302,7 +1302,7 @@ function startTurkeyEvent(){
   var by = rnd(200, WORLD_H - 180);
   TK.boss = {
     x:bx, y:by, vx:0, vy:0, face:1, bob:0, hurt:0,
-    hp:30, max:30, wander:0, tx:bx, ty:by, dash:0, gold:TK.golden
+    hp:30, max:30, wander:0, tx:bx, ty:by, dash:0, cool:0.8, gold:TK.golden
   };
   TK.birds = [];
   for (var i = 0; i < 9; i++) spawnBird(i % 2 === 0);
@@ -1418,11 +1418,13 @@ function updateTurkey(dt){
     b.bob += dt * 4.2;
     if (b.hurt > 0) b.hurt -= dt;
     if (b.dash > 0) b.dash -= dt;
+    if (b.cool > 0) b.cool -= dt;
     b.wander -= dt;
     var d = dst(b.x, b.y, p.x, p.y);
     var spd = 66;
-    if (d < 270 && b.dash <= 0){
-      b.dash = 0.75;
+    if (d < 215 && b.dash <= 0 && b.cool <= 0){
+      b.dash = 0.7;
+      b.cool = rnd(3.0, 4.6);
       b.tx = clamp(b.x + (b.x - p.x) / (d || 1) * 300, SAFE_X + 90, WORLD_W - 90);
       b.ty = clamp(b.y + (b.y - p.y) / (d || 1) * 240, 110, WORLD_H - 110);
       SFX.turkey();
@@ -1432,7 +1434,7 @@ function updateTurkey(dt){
       b.tx = clamp(b.x + rnd(-280, 280), SAFE_X + 90, WORLD_W - 90);
       b.ty = clamp(b.y + rnd(-240, 240), 110, WORLD_H - 110);
     }
-    if (b.dash > 0) spd = 205;
+    if (b.dash > 0) spd = 190;
     var ang = Math.atan2(b.ty - b.y, b.tx - b.x);
     var kk = 1 - Math.pow(0.002, dt);
     b.vx = lerp(b.vx, Math.cos(ang) * spd, kk);
