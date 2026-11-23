@@ -45,8 +45,39 @@
   #railMark{position:absolute;top:-2px;left:0;width:7px;height:23px;border-radius:4px;background:#fff;
     box-shadow:0 0 10px #fff,0 0 22px rgba(255,255,255,.6);transform:translateX(-50%);transition:left .08s linear}
 
+  /* time of day badge */
+  #todPill{gap:5px;transition:background .9s ease,border-color .9s ease,color .9s ease,box-shadow .9s ease}
+  #todPill .num{font-size:11.5px;letter-spacing:-.3px}
+  #todPill.tod-morning{background:linear-gradient(180deg,rgba(255,222,164,.96),rgba(226,150,80,.94));
+    border-color:rgba(255,238,198,.65);color:#42200a;box-shadow:0 0 18px rgba(255,190,110,.35),0 6px 18px rgba(0,0,0,.4)}
+  #todPill.tod-day{background:linear-gradient(180deg,rgba(190,232,255,.96),rgba(96,178,236,.94));
+    border-color:rgba(236,250,255,.7);color:#04263a;box-shadow:0 0 18px rgba(150,215,255,.35),0 6px 18px rgba(0,0,0,.4)}
+  #todPill.tod-dusk{background:linear-gradient(180deg,rgba(255,176,132,.96),rgba(186,86,108,.94));
+    border-color:rgba(255,214,178,.6);color:#3d1108;box-shadow:0 0 20px rgba(255,140,90,.4),0 6px 18px rgba(0,0,0,.4)}
+  #todPill.tod-night{background:linear-gradient(180deg,rgba(48,58,112,.96),rgba(14,19,44,.96));
+    border-color:rgba(150,170,255,.4);color:#e2e9ff;box-shadow:0 0 20px rgba(120,150,255,.35),0 6px 18px rgba(0,0,0,.4)}
+  #todPill.tod-night .num{text-shadow:0 0 10px rgba(160,185,255,.8)}
+
   /* menu buttons */
-  #menu{display:flex;gap:5px;justify-content:flex-end;margin-top:6px;pointer-events:auto}
+  #menu{display:flex;gap:5px;justify-content:space-between;align-items:center;margin-top:6px;pointer-events:auto}
+  #menuLeft{display:flex;gap:5px;align-items:center;min-width:0}
+  #menuRight{display:flex;gap:5px;align-items:center}
+  .chipbtn{display:flex;align-items:center;gap:4px;height:29px;padding:0 9px;border-radius:10px;cursor:pointer;
+    border:1px solid rgba(255,255,255,.14);background:linear-gradient(180deg,rgba(30,39,64,.92),rgba(12,17,30,.92));
+    font-size:10.5px;font-weight:900;letter-spacing:-.3px;white-space:nowrap;color:#dfe8f8;
+    box-shadow:0 4px 12px rgba(0,0,0,.32);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  .chipbtn .e{font-size:13px;line-height:1}
+  .chipbtn:active{transform:scale(.94)}
+  .chipbtn.hot{border-color:rgba(255,178,107,.75);color:#ffe3bd;
+    background:linear-gradient(180deg,rgba(126,66,24,.95),rgba(60,30,10,.95));
+    box-shadow:0 0 0 2px rgba(255,150,60,.2),0 4px 14px rgba(0,0,0,.35)}
+  .chipbtn.hot .e{animation:flap 1.1s ease-in-out infinite}
+  @keyframes flap{0%,100%{transform:rotate(-9deg) scale(1)}50%{transform:rotate(9deg) scale(1.14)}}
+  .chipbtn.dim{opacity:.52}
+  .chipbtn.fth{color:#ffd9a8}
+  .buy.fth{background:linear-gradient(180deg,#ffcf8e,#e08a3c);color:#3a1c00}
+  .tkHp{height:7px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden;margin-top:5px}
+  .tkHp i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#ffd35e,#ff7b4d)}
   .iconbtn{width:33px;height:33px;border-radius:11px;border:1px solid rgba(255,255,255,.13);cursor:pointer;
     background:linear-gradient(180deg,rgba(30,39,64,.92),rgba(12,17,30,.92));font-size:15px;line-height:1;
     display:flex;align-items:center;justify-content:center;position:relative;
@@ -210,15 +241,22 @@
 <div id="hud">
   <div id="hudRow">
     <div class="pill"><span class="ic">💰</span><span class="num" id="moneyTxt">$0</span><span class="sub" id="incomeTxt">+$0/s</span></div>
+    <div class="pill" id="todPill"><span class="ic" id="todEmo">🌅</span><span class="num" id="todTxt">아침</span></div>
     <div class="pill" id="speedPill"><span class="ic">⚡</span><span class="num" id="speedNum">15</span><span class="sub" id="reqTxt">스피드</span></div>
   </div>
   <div id="rail"><div id="railInner"></div><div id="railMark"></div></div>
   <div id="menu">
-    <button class="iconbtn" id="btnDex" title="도감">📖</button>
-    <button class="iconbtn" id="btnShop" title="상점">🛒</button>
-    <button class="iconbtn" id="btnFuse" title="퓨즈">⚗️</button>
-    <button class="iconbtn" id="btnMute" title="소리">🔊</button>
-    <button class="iconbtn" id="btnSet" title="설정">⚙️</button>
+    <div id="menuLeft">
+      <button class="chipbtn" id="btnEvent"><span class="e">🦃</span><span id="eventTxt">이벤트</span></button>
+      <button class="chipbtn fth dim" id="btnFeather"><span class="e">🪶</span><span id="featherTxt">0</span></button>
+    </div>
+    <div id="menuRight">
+      <button class="iconbtn" id="btnDex" title="도감">📖</button>
+      <button class="iconbtn" id="btnShop" title="상점">🛒</button>
+      <button class="iconbtn" id="btnFuse" title="퓨즈">⚗️</button>
+      <button class="iconbtn" id="btnMute" title="소리">🔊</button>
+      <button class="iconbtn" id="btnSet" title="설정">⚙️</button>
+    </div>
   </div>
 </div>
 
@@ -260,6 +298,7 @@
       <span class="howchip">🥚 훔치기 · E</span>
       <span class="howchip">🪤 덫 · Q</span>
       <span class="howchip">🏃 러닝머신 훈련</span>
+      <span class="howchip">🦃 터키 이벤트</span>
     </div>
     <button id="startBtn">게임 시작</button>
     <div id="startNote">진행 상황은 자동으로 저장됩니다 · 소리는 상단 🔊 버튼으로 끌 수 있어요</div>
@@ -320,13 +359,17 @@ var RAR = [
   { n:'에픽',   rgb:[185,140,255], base:12,  hatch:3.2, emo:['🦩','🦚','🦜'], dark:'#6a3fb5' },
   { n:'전설',   rgb:[255,200,92],  base:40,  hatch:3.8, emo:['🦄','🐲','🦖'], dark:'#c0761a' },
   { n:'미식',   rgb:[255,143,163], base:150, hatch:4.4, emo:['🦞','🍣','🍰'], dark:'#b0324c' },
-  { n:'이터널', rgb:[127,245,230], base:600, hatch:5.0, emo:['🛸','👽','🌠'], dark:'#1b6f8c' }
+  { n:'이터널', rgb:[127,245,230], base:600, hatch:5.0, emo:['🛸','👽','🌠'], dark:'#1b6f8c' },
+  { n:'디바인', rgb:[255,238,150], base:4200, hatch:5.6, emo:['🦚','🦄','🐉','🦅'], dark:'#8a5a00' }
 ];
 var MUT = [
   { n:'',        mult:1,   rgb:null },
   { n:'골드',    mult:2.5, rgb:[255,211,77],  emo:'✨' },
-  { n:'에일리언', mult:4,   rgb:[140,255,107], emo:'👽' }
+  { n:'에일리언', mult:4,   rgb:[140,255,107], emo:'👽' },
+  { n:'메이플',  mult:2.9, rgb:[255,140,60],  emo:'🍁' }
 ];
+var DIVINE_NAMES = ['Golden Tyrant', 'Divine King Gobble', 'Celestial Phoenix', 'Rainbow Roc', 'SolarWyrm', 'Starfall Roc'];
+var DIVINE_KO = '디바인';
 
 var BIOMES = [
   { name:'숲',   emo:'🌲', req:10,  gName:'닭',        gEmo:'🐔', x0:1000, x1:2300,
@@ -364,6 +407,71 @@ function trapCap(){ return 2 + state.upg.traps; }
 var TRAP_RECHARGE = 14;
 
 /* =========================================================
+   1b. Day / night cycle
+   ========================================================= */
+var DAY = {
+  len: 240,            /* 한 사이클 240초 */
+  t: 0,                /* 0 = 동합기, 1 = 동합기 직전 */
+  tintKeys: [
+    { p:0.00, c:[214,208,232] },
+    { p:0.06, c:[255,232,206] },
+    { p:0.16, c:[255,250,240] },
+    { p:0.40, c:[255,255,255] },
+    { p:0.54, c:[255,236,210] },
+    { p:0.62, c:[255,179,138] },
+    { p:0.70, c:[168,150,190] },
+    { p:0.78, c:[72,84,138] },
+    { p:0.92, c:[78,92,146] },
+    { p:1.00, c:[214,208,232] }
+  ],
+  nightKeys: [
+    { p:0.00, v:0.10 },
+    { p:0.06, v:0.02 },
+    { p:0.16, v:0 },
+    { p:0.45, v:0 },
+    { p:0.58, v:0.10 },
+    { p:0.66, v:0.45 },
+    { p:0.74, v:0.85 },
+    { p:0.80, v:1 },
+    { p:0.92, v:1 },
+    { p:1.00, v:0.10 }
+  ],
+  keys: function(arr){
+    var t = this.t - Math.floor(this.t);
+    for (var i = 0; i < arr.length - 1; i++){
+      var a = arr[i], b = arr[i + 1];
+      if (t >= a.p && t <= b.p){
+        var f = (t - a.p) / Math.max(0.0001, b.p - a.p);
+        return { a:a, b:b, f:f };
+      }
+    }
+    return { a:arr[0], b:arr[arr.length - 1], f:0 };
+  },
+  tint: function(){
+    var k = this.keys(this.tintKeys);
+    var f = k.f * k.f * (3 - 2 * k.f);
+    return [
+      Math.round(lerp(k.a.c[0], k.b.c[0], f)),
+      Math.round(lerp(k.a.c[1], k.b.c[1], f)),
+      Math.round(lerp(k.a.c[2], k.b.c[2], f))
+    ];
+  },
+  nightF: function(){
+    var k = this.keys(this.nightKeys);
+    var f = k.f * k.f * (3 - 2 * k.f);
+    return clamp(lerp(k.a.v, k.b.v, f), 0, 1);
+  },
+  phase: function(){
+    var t = this.t - Math.floor(this.t);
+    if (t < 0.12) return { id:'morning', emo:'🌅', name:'아침' };
+    if (t < 0.45) return { id:'day', emo:'☀️', name:'낮' };
+    if (t < 0.65) return { id:'dusk', emo:'🌇', name:'저녁' };
+    return { id:'night', emo:'🌙', name:'밤' };
+  },
+  advance: function(dt){ this.t = (this.t + dt / this.len) % 1; }
+};
+
+/* =========================================================
    2. Save / State
    ========================================================= */
 var SAVE_KEY = 'stealAnEgg.v1';
@@ -377,10 +485,13 @@ function freshState(){
     pets: [],
     dex: {},
     upg: { tread:1, shoes:0, pen:1, traps:1 },
-    stats: { stolen:0, hatched:0, fused:0, caught:0, bestW:0, bestInc:0 },
+    stats: { stolen:0, hatched:0, fused:0, caught:0, bestW:0, bestInc:0, turkeys:0, bosses:0 },
     muted: false,
     started: false,
-    bestBiome: 0
+    bestBiome: 0,
+    feathers: 0,
+    skin: 'farm',
+    sot: 0
   };
 }
 var state = freshState();
@@ -390,9 +501,10 @@ function saveNow(){
     var d = {
       v: 1,
       money: state.money, speed: state.speed, traps: state.traps, trapTimer: state.trapTimer,
-      pets: state.pets.map(function(p){ return { r:p.r, m:p.m, w:p.w, e:p.e, inc:p.inc, x:p.x, y:p.y }; }),
+      pets: state.pets.map(function(p){ return { r:p.r, m:p.m, w:p.w, e:p.e, inc:p.inc, x:p.x, y:p.y, nm:p.nm || null }; }),
       dex: state.dex, upg: state.upg, stats: state.stats, muted: state.muted,
-      started: state.started, bestBiome: state.bestBiome
+      started: state.started, bestBiome: state.bestBiome,
+      feathers: state.feathers, skin: state.skin, sot: DAY.t
     };
     window.localStorage.setItem(SAVE_KEY, JSON.stringify(d));
     return true;
@@ -411,6 +523,9 @@ function loadSave(){
     state.muted = !!d.muted;
     state.started = !!d.started;
     state.bestBiome = +d.bestBiome || 0;
+    state.feathers = Math.max(0, Math.floor(+d.feathers || 0));
+    state.skin = (d.skin === 'turkey') ? 'turkey' : 'farm';
+    if (isFinite(+d.sot)) DAY.t = clamp(+d.sot, 0, 0.999);
     if (d.upg){
       for (var k in state.upg){
         if (d.upg[k] !== undefined && isFinite(+d.upg[k])){
@@ -421,14 +536,16 @@ function loadSave(){
     if (d.dex && typeof d.dex === 'object') state.dex = d.dex;
     if (d.stats) for (var s in state.stats){ if (isFinite(+d.stats[s])) state.stats[s] = +d.stats[s]; }
     if (d.pets && d.pets.length){
-      state.pets = d.pets.filter(function(p){ return p && p.r >= 0 && p.r <= 5; }).map(function(p){
+      state.pets = d.pets.filter(function(p){ return p && p.r >= 0 && p.r <= 6; }).map(function(p){
+        var rr = clamp(Math.floor(+p.r), 0, 6), mm = clamp(Math.floor(+p.m || 0), 0, MUT.length - 1);
         return {
-          r: clamp(Math.floor(+p.r), 0, 5),
-          m: clamp(Math.floor(+p.m || 0), 0, 2),
+          r: rr,
+          m: mm,
           w: +p.w || 1,
-          e: p.e || pick(RAR[clamp(Math.floor(+p.r),0,5)].emo),
-          inc: +p.inc || petIncome(clamp(Math.floor(+p.r),0,5), clamp(Math.floor(+p.m||0),0,2), +p.w || 1),
-          x: +p.x || 0, y: +p.y || 0
+          e: p.e || pick(RAR[rr].emo),
+          inc: +p.inc || petIncome(rr, mm, +p.w || 1),
+          x: +p.x || 0, y: +p.y || 0,
+          nm: p.nm || null
         };
       });
     }
@@ -479,6 +596,9 @@ var G = {
   parts: [],
   floats: [],
   deco: [],
+  drops: [],
+  flies: [],
+  divineT: 16,
   banner: null,
   chaseWarn: 0,
   incomePulse: 0,
@@ -568,6 +688,17 @@ function buildWorld(){
       x: PEN_X0 + 10 + rng() * (PEN_X1 - PEN_X0 - 20),
       y: 40 + rng() * (WORLD_H - 80),
       t: rng(), s: 0.45 + rng() * 0.85, ph: rng() * TAU
+    });
+  }
+
+  /* 반딧불이 (밤 전용) */
+  G.flies = [];
+  for (j = 0; j < 78; j++){
+    var fx = 60 + rng() * (WORLD_W - 140);
+    G.flies.push({
+      x: fx, y: 60 + rng() * (WORLD_H - 120),
+      vx: rnd(-9, 9), vy: rnd(-7, 7),
+      ph: rng() * TAU, sp: 0.5 + rng() * 0.9
     });
   }
 }
@@ -754,7 +885,12 @@ var SFX = {
   trap:   function(){ tone(420, 0.08, 'square', 0.05, 200); tone(160, 0.1, 'sine', 0.05, 90, 0.05); },
   stun:   function(){ tone(300, 0.18, 'triangle', 0.06, 140); tone(140, 0.2, 'sine', 0.05, 90, 0.1); },
   step:   function(){ tone(150 + Math.random() * 90, 0.045, 'sine', 0.016, 110); },
-  train:  function(){ tone(520 + Math.random() * 40, 0.04, 'square', 0.02, 640); }
+  train:  function(){ tone(520 + Math.random() * 40, 0.04, 'square', 0.02, 640); },
+  divine: function(){ var n = [784, 988, 1318, 1568, 1976]; for (var i = 0; i < 5; i++) tone(n[i], 0.22, 'triangle', 0.055, n[i] * 1.06, i * 0.06); },
+  turkey: function(){ tone(300, 0.14, 'sawtooth', 0.06, 180); tone(180, 0.18, 'sawtooth', 0.05, 120, 0.13); tone(320, 0.1, 'square', 0.03, 200, 0.3); },
+  hit:    function(){ tone(460, 0.06, 'square', 0.05, 220); },
+  feather:function(){ tone(1500, 0.05, 'sine', 0.03, 1980); tone(1980, 0.07, 'sine', 0.022, 2380, 0.04); },
+  boss:   function(){ tone(120, 0.5, 'sawtooth', 0.09, 62); tone(240, 0.42, 'square', 0.045, 110, 0.12); }
 };
 function toggleMute(){
   state.muted = !state.muted;
@@ -922,6 +1058,8 @@ function doAction(){
   if (!G.started || ui.open) return;
   if (p.state === 'steal' || p.state === 'hatch') return;
 
+  if (TK.active && tkAttack()) return;
+
   if (p.carry){
     if (inSafe()) startHatch();
     else { toast('안전지대로 돌아가야 부화할 수 있어요! 🏃', 'bad'); SFX.no(); }
@@ -952,7 +1090,8 @@ function finishSteal(n){
   n.respawn = rnd(18, 26);
   n.pop = 1;
   var w = Math.round(rnd(0.7, 1.6 + n.r * 2.15) * 10) / 10;
-  p.carry = { r:n.r, m:n.m, w:w };
+  p.carry = { r:n.r, m:n.m, w:w, nm:n.nm || null };
+  n.nm = null;
   p.state = 'idle'; p.chanNest = null;
   state.stats.stolen++;
   var rgb = RAR[n.r].rgb;
@@ -1019,6 +1158,7 @@ function finishHatch(){
   var pet = {
     r: c.r, m: c.m, w: c.w,
     e: pick(RAR[c.r].emo),
+    nm: c.nm || null,
     inc: petIncome(c.r, c.m, c.w),
     x: rnd(140, 860), y: rnd(170, WORLD_H - 120),
     vx: 0, vy: 0, wt: 0, bob: rnd(0, 6)
@@ -1057,6 +1197,328 @@ function placeTrap(){
 }
 
 /* =========================================================
+   13b. Divine spawns / drops / Turkey event
+   ========================================================= */
+function divineCount(){
+  var c = 0;
+  for (var i = 0; i < G.nests.length; i++) if (G.nests[i].occ && G.nests[i].r === 6) c++;
+  return c;
+}
+
+/* 디바인 알: 높은 구역 쪽에 비중을 두고 계속 자주 등장 */
+function updateDivine(dt){
+  G.divineT -= dt;
+  if (G.divineT > 0) return;
+  G.divineT = rnd(13, 21) * (1 - DAY.nightF() * 0.25);
+  if (divineCount() >= 4) return;
+  var pool = [], i, n;
+  for (i = 0; i < G.nests.length; i++){
+    n = G.nests[i];
+    if (n.r === 6 || n === G.player.chanNest) continue;
+    var w = n.b >= 3 ? 4 : (n.b === 2 ? 2 : 1);
+    for (var k = 0; k < w; k++) pool.push(n);
+  }
+  if (!pool.length) return;
+  n = pick(pool);
+  var near = dst(G.player.x, G.player.y, n.x, n.y) < 1200;
+  n.occ = true;
+  n.r = 6;
+  n.m = (Math.random() < 0.4) ? 1 : 0;
+  n.pop = 0; n.respawn = 0;
+  n.nm = pick(DIVINE_NAMES);
+  if (near){
+    burst(n.x, n.y - 12, [255, 238, 150], 24, 210);
+    float('✨ ' + n.nm, n.x, n.y - 64, '#fff2b0', 14);
+    SFX.divine();
+  }
+  if (Math.random() < 0.7) toast('✨ 디바인 알 등장! ' + n.nm + ' · ' + BIOMES[n.b].name, 'good');
+}
+
+/* 바닥에 떨어진 알 */
+function addDrop(x, y, r, m, nm, w){
+  G.drops.push({
+    x: clamp(x, 60, WORLD_W - 60), y: clamp(y, 90, WORLD_H - 70),
+    r: r, m: m || 0,
+    w: w || Math.round(rnd(0.8, 1.8 + r * 2.2) * 10) / 10,
+    nm: nm || null, pop: 0, bob: rnd(0, 6), life: 180
+  });
+}
+function updateDrops(dt){
+  var p = G.player;
+  for (var i = G.drops.length - 1; i >= 0; i--){
+    var d = G.drops[i];
+    d.pop = Math.min(1, (d.pop || 0) + dt * 2.4);
+    d.bob = (d.bob || 0) + dt * 2.2;
+    d.life -= dt;
+    if (d.life <= 0){ G.drops.splice(i, 1); continue; }
+    if (!p.carry && p.state === 'idle' && dst(p.x, p.y, d.x, d.y) < 46){
+      p.carry = { r:d.r, m:d.m, w:d.w, nm:d.nm };
+      state.stats.stolen++;
+      burst(d.x, d.y - 10, RAR[d.r].rgb, 20, 180);
+      float('🥚 ' + (d.nm || RAR[d.r].n), d.x, d.y - 40, '#ffe9a8', 15);
+      toast('🥚 ' + (d.nm || RAR[d.r].n) + ' 알을 주웠어요! 안전지대에서 부화하세요', 'good');
+      SFX.steal();
+      G.drops.splice(i, 1);
+      saveNow();
+    }
+  }
+}
+
+/* ---------- 터키 이벤트 (Turkey Takeover / 킹 고블) ---------- */
+var TKD = { DUR: 90, RANGE: 96, NEXT0: 75, NEXT: [100, 170] };
+var TK = { active:false, t:0, next:TKD.NEXT0, boss:null, birds:[], cd:0, golden:false, started:0 };
+var TKSHOP = [
+  { k:'maple', emo:'🍁', n:'메이플 변이', cost:30, ds:'수입 ×2.9 · 가장 수입 높은 펫 1마리에 적용' },
+  { k:'cornu', emo:'🌽', n:'Cornuclaw 알', cost:45, ds:'Secret 등급 · 디바인 알을 즉시 받아요' },
+  { k:'moose', emo:'🦌', n:'Mapleleaf Moose 알', cost:25, ds:'Eternal 등급 · 메이플 무스' },
+  { k:'skin',  emo:'🌾', n:'터키 농장 스킨', cost:60, ds:'농장이 가을빛으로 바뀝니다' }
+];
+
+function spawnBird(nearBoss){
+  var x, y;
+  if (nearBoss && TK.boss && Math.random() < 0.7){
+    x = clamp(TK.boss.x + rnd(-330, 330), SAFE_X + 80, WORLD_W - 90);
+    y = clamp(TK.boss.y + rnd(-270, 270), 100, WORLD_H - 100);
+  } else {
+    x = clamp(G.player.x + rnd(-520, 520), SAFE_X + 90, WORLD_W - 90);
+    y = clamp(G.player.y + rnd(-420, 420), 100, WORLD_H - 100);
+  }
+  TK.birds.push({ x:x, y:y, vx:0, vy:0, face:1, bob:rnd(0, 6), hurt:0, t:rnd(0.6, 2.4) });
+}
+
+function startTurkeyEvent(){
+  if (!G.started){ return false; }
+  if (TK.active){
+    toast('🦃 이미 이벤트 중이에요 · 남은 ' + Math.ceil(TK.t) + '초', 'bad');
+    return false;
+  }
+  TK.active = true;
+  TK.t = TKD.DUR;
+  TK.cd = 0;
+  TK.started = G.t;
+  TK.golden = Math.random() < 0.3;
+  var zone = BIOMES[rndi(1, 4)];
+  var bx = clamp(rnd(zone.x0 + 140, zone.x1 - 160), SAFE_X + 140, WORLD_W - 160);
+  var by = rnd(200, WORLD_H - 180);
+  TK.boss = {
+    x:bx, y:by, vx:0, vy:0, face:1, bob:0, hurt:0,
+    hp:30, max:30, wander:0, tx:bx, ty:by, dash:0, gold:TK.golden
+  };
+  TK.birds = [];
+  for (var i = 0; i < 9; i++) spawnBird(i % 2 === 0);
+  audioInit();
+  SFX.boss();
+  G.shake = 0.5;
+  G.banner = {
+    t:3.4, max:3.4, emo:'🦃', name:'터키 테이크오버',
+    sub: TK.golden ? '골든 킹 고블! 보상 2배 ✨' : '킹 고블을 쫓아가 때려 잡으세요!',
+    col:'#ffbe7a'
+  };
+  toast('🦃 터키 이벤트 시작! 깃털을 모아 🦃 터키 상점에서 쓰세요', 'good');
+  saveNow();
+  return true;
+}
+
+function endTurkeyEvent(quiet){
+  if (!TK.active) return;
+  TK.active = false;
+  TK.boss = null;
+  TK.birds = [];
+  TK.next = rnd(TKD.NEXT[0], TKD.NEXT[1]);
+  if (!quiet) toast('🦃 터키 떼가 달아났어요... 다음 이벤트를 기다려요', 'bad');
+  saveNow();
+}
+
+function tkTarget(){
+  var p = G.player, best = null, bd = TKD.RANGE;
+  for (var i = 0; i < TK.birds.length; i++){
+    var b = TK.birds[i];
+    var d = dst(p.x, p.y, b.x, b.y);
+    if (d < bd){ bd = d; best = { kind:'bird', it:b }; }
+  }
+  if (TK.boss){
+    var db = dst(p.x, p.y, TK.boss.x, TK.boss.y);
+    if (db < TKD.RANGE + 20 && db < bd + 26) best = { kind:'boss', it:TK.boss };
+  }
+  return best;
+}
+
+function tkAttack(){
+  if (!TK.active || TK.cd > 0) return false;
+  var t = tkTarget();
+  if (!t) return false;
+  var p = G.player;
+  TK.cd = 0.32;
+  p.anim += 0.7;
+  if (t.kind === 'bird'){
+    var b = t.it;
+    var f = rndi(2, 5);
+    state.feathers += f;
+    state.stats.turkeys++;
+    state.money += rndi(25, 70);
+    burst(b.x, b.y - 8, [255, 190, 120], 18, 160);
+    float('🪶 +' + f, b.x, b.y - 30, '#ffd7a8', 15);
+    var at = TK.birds.indexOf(b);
+    if (at >= 0) TK.birds.splice(at, 1);
+    SFX.feather();
+    float('칙!', p.x + (b.x - p.x) * 0.4, p.y - 26, '#ffe9a8', 13);
+    if (TK.birds.length < 6 && Math.random() < 0.75) spawnBird(true);
+  } else {
+    var bo = t.it;
+    var crit = Math.random() < 0.15;
+    bo.hp -= crit ? 2 : 1;
+    bo.hurt = 0.25;
+    G.shake = 0.22;
+    var f2 = crit ? 4 : 2;
+    state.feathers += f2;
+    float((crit ? '💥 ' : '') + '🪶 +' + f2, bo.x, bo.y - 58, crit ? '#fff2b0' : '#ffe0b0', crit ? 17 : 13);
+    burst(bo.x, bo.y - 12, [255, 170, 90], 12, 170);
+    SFX.hit();
+    if (bo.hp <= 0) tkDefeatBoss();
+  }
+  return true;
+}
+
+function tkDefeatBoss(){
+  var bo = TK.boss;
+  if (!bo) return;
+  var mult = TK.golden ? 2 : 1;
+  var f = Math.round(52 * mult + rnd(0, 22));
+  var money = Math.round((1400 + rnd(0, 900)) * mult);
+  state.feathers += f;
+  state.money += money;
+  state.stats.bosses++;
+  addDrop(bo.x, bo.y, 6, TK.golden ? 2 : 1, 'Divine King Gobble', Math.round(rnd(17, 25) * 10) / 10);
+  burst(bo.x, bo.y - 16, [255, 220, 140], 46, 260);
+  burst(bo.x, bo.y - 16, [255, 140, 80], 26, 230);
+  G.shake = 0.9;
+  TK.boss = null;
+  TK.t = Math.min(TK.t, 14);
+  float('👑 킹 고블 처치!', bo.x, bo.y - 84, '#fff0a8', 20);
+  toast('👑 킹 고블 처치! 🪶 +' + f + ' · 💰 +$' + fmt(money) + ' · 디바인 알 드롭!', 'good');
+  SFX.big();
+  SFX.divine();
+  saveNow();
+}
+
+function updateTurkey(dt){
+  if (!TK.active){
+    TK.next -= dt;
+    if (TK.next <= 0 && G.started){
+      TK.next = 9999;
+      startTurkeyEvent();
+    }
+    return;
+  }
+  TK.t -= dt;
+  if (TK.cd > 0) TK.cd -= dt;
+  var p = G.player, b = TK.boss, i;
+
+  if (b){
+    b.bob += dt * 4.2;
+    if (b.hurt > 0) b.hurt -= dt;
+    if (b.dash > 0) b.dash -= dt;
+    b.wander -= dt;
+    var d = dst(b.x, b.y, p.x, p.y);
+    var spd = 66;
+    if (d < 270 && b.dash <= 0){
+      b.dash = 0.75;
+      b.tx = clamp(b.x + (b.x - p.x) / (d || 1) * 300, SAFE_X + 90, WORLD_W - 90);
+      b.ty = clamp(b.y + (b.y - p.y) / (d || 1) * 240, 110, WORLD_H - 110);
+      SFX.turkey();
+    }
+    if (b.wander <= 0 && b.dash <= 0){
+      b.wander = rnd(1.8, 3.4);
+      b.tx = clamp(b.x + rnd(-280, 280), SAFE_X + 90, WORLD_W - 90);
+      b.ty = clamp(b.y + rnd(-240, 240), 110, WORLD_H - 110);
+    }
+    if (b.dash > 0) spd = 205;
+    var ang = Math.atan2(b.ty - b.y, b.tx - b.x);
+    var kk = 1 - Math.pow(0.002, dt);
+    b.vx = lerp(b.vx, Math.cos(ang) * spd, kk);
+    b.vy = lerp(b.vy, Math.sin(ang) * spd, kk);
+    b.x = clamp(b.x + b.vx * dt, SAFE_X + 40, WORLD_W - 70);
+    b.y = clamp(b.y + b.vy * dt, 90, WORLD_H - 90);
+    if (b.vx < -8) b.face = -1; else if (b.vx > 8) b.face = 1;
+    if (Math.random() < dt * 3){
+      G.parts.push({
+        x:b.x + rnd(-16, 16), y:b.y + 14, vx:rnd(-20, 20), vy:rnd(-30, -6),
+        life:rnd(0.3, 0.6), max:0.6, r:rnd(1.4, 3), col:'rgba(255,196,120,.6)'
+      });
+    }
+  }
+
+  for (i = TK.birds.length - 1; i >= 0; i--){
+    var bd = TK.birds[i];
+    bd.bob += dt * 7;
+    if (bd.hurt > 0) bd.hurt -= dt;
+    var dd = dst(bd.x, bd.y, p.x, p.y);
+    if (dd < 230){
+      var fa = Math.atan2(bd.y - p.y, bd.x - p.x);
+      bd.vx = lerp(bd.vx, Math.cos(fa) * 180, 1 - Math.pow(0.02, dt));
+      bd.vy = lerp(bd.vy, Math.sin(fa) * 180, 1 - Math.pow(0.02, dt));
+    } else {
+      bd.t -= dt;
+      if (bd.t <= 0){
+        bd.t = rnd(0.8, 2.6);
+        var a2 = Math.random() * TAU;
+        bd.vx = Math.cos(a2) * 44;
+        bd.vy = Math.sin(a2) * 44;
+      }
+    }
+    bd.x = clamp(bd.x + bd.vx * dt, SAFE_X + 40, WORLD_W - 60);
+    bd.y = clamp(bd.y + bd.vy * dt, 80, WORLD_H - 80);
+    if (bd.vx < -8) bd.face = -1; else if (bd.vx > 8) bd.face = 1;
+  }
+  if (TK.birds.length < 6 && Math.random() < dt * 0.5) spawnBird(true);
+
+  if (TK.t <= 0) endTurkeyEvent(TK.boss === null);
+}
+
+function tkBuy(k){
+  var it = null, i;
+  for (i = 0; i < TKSHOP.length; i++) if (TKSHOP[i].k === k) it = TKSHOP[i];
+  if (!it) return;
+  if (k === 'skin' && state.skin === 'turkey'){ toast('이미 터키 농장 스킨을 쓰고 있어요 🌾'); return; }
+  if (state.feathers < it.cost){ toast('깃털이 부족해요 🪶 ' + fmt(state.feathers) + ' / ' + it.cost, 'bad'); SFX.no(); return; }
+
+  if (k === 'maple'){
+    var best = null;
+    for (i = 0; i < state.pets.length; i++){
+      var pt = state.pets[i];
+      if (pt.m === 3) continue;
+      if (!best || petIncome(pt.r, 3, pt.w) > petIncome(best.r, 3, best.w)) best = pt;
+    }
+    if (!best){ toast('메이플 변이를 줄 펫이 없어요 🍁', 'bad'); SFX.no(); return; }
+    state.feathers -= it.cost;
+    best.m = 3;
+    best.inc = petIncome(best.r, 3, best.w);
+    var key = best.r + '_3';
+    state.dex[key] = (state.dex[key] || 0) + 1;
+    if (best.inc > state.stats.bestInc) state.stats.bestInc = best.inc;
+    burst(best.x, best.y - 10, [255, 140, 60], 26, 200);
+    float('🍁 ×2.9', best.x, best.y - 30, '#ffb27a', 14);
+    toast('🍁 메이플 변이! ' + RAR[best.r].n + ' 펫 수입 +$' + fmt1(best.inc) + '/s', 'good');
+    SFX.buy();
+  } else {
+    state.feathers -= it.cost;
+    if (k === 'cornu'){
+      addDrop(G.player.x + 40, G.player.y + 10, 6, 1, 'Cornuclaw');
+      toast('🌽 Cornuclaw 알을 받았어요! 발밑 알을 주우세요', 'good');
+    } else if (k === 'moose'){
+      addDrop(G.player.x - 40, G.player.y + 10, 5, 0, 'Mapleleaf Moose');
+      toast('🦌 Mapleleaf Moose 알을 받았어요! 발밑 알을 주우세요', 'good');
+    } else if (k === 'skin'){
+      state.skin = 'turkey';
+      toast('🌾 터키 농장 스킨 적용! 가을빛 농장이에요', 'good');
+    }
+    SFX.buy();
+  }
+  saveNow();
+  if (ui.kind === 'turkey') renderTurkey();
+}
+
+/* =========================================================
    14. Fuse
    ========================================================= */
 function fuseOdds(){
@@ -1085,7 +1547,7 @@ function doFuse(idxs){
   if (r < 0.07) up = 3;
   else if (r < 0.25) up = 2;
   else if (r < 0.60) up = 1;
-  var newR = clamp(maxR + up, 0, 5);
+  var newR = clamp(maxR + up, 0, RAR.length - 1);
   var pGold = 0.10 + (anyMut ? 0.05 : 0);
   var mm = Math.random();
   var newM = mm < 0.03 ? 2 : (mm < 0.03 + pGold ? 1 : 0);
@@ -1311,6 +1773,7 @@ function updateNests(dt){
         n.occ = true;
         n.r = rollRarity(BIOMES[n.b]);
         n.m = rollMut(BIOMES[n.b]);
+        n.nm = null;
         n.pop = 0;
       }
     }
@@ -1392,10 +1855,15 @@ function updateCamera(dt){
 
 function update(dt){
   G.t += dt;
+  DAY.advance(dt);
   if (!ui.open){
     updatePlayer(dt);
     updateGuardians(dt);
     updateTraps(dt);
+    updateTurkey(dt);
+    updateDivine(dt);
+    updateDrops(dt);
+    updateFlies(dt);
   }
   updateNests(dt);
   updatePets(dt);
@@ -1446,6 +1914,210 @@ function viewBounds(){
   return { x0:G.cam.x - hw - 90, x1:G.cam.x + hw + 90, y0:G.cam.y - hh - 90, y1:G.cam.y + hh + 90 };
 }
 
+/* ---------- 낮/밤 ---------- */
+function applyDayTint(){
+  var t = DAY.tint();
+  ctx.save();
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.globalCompositeOperation = 'multiply';
+  ctx.fillStyle = 'rgb(' + t[0] + ',' + t[1] + ',' + t[2] + ')';
+  ctx.fillRect(0, 0, VW, VH);
+  ctx.restore();
+}
+
+var STARS = null;
+function nightStars(){
+  if (STARS) return STARS;
+  STARS = [];
+  var rng = mulberry32(778899);
+  for (var i = 0; i < 92; i++){
+    STARS.push({ x:rng(), y:rng() * 0.82, r:0.5 + rng() * 1.6, ph:rng() * TAU, sp:0.5 + rng() * 1.8 });
+  }
+  return STARS;
+}
+function updateFlies(dt){
+  if (DAY.nightF() <= 0.02) return;
+  for (var i = 0; i < G.flies.length; i++){
+    var f = G.flies[i];
+    f.ph += dt * f.sp * 2;
+    f.x += Math.cos(f.ph * 1.3) * 11 * dt + f.vx * dt;
+    f.y += Math.sin(f.ph) * 8 * dt + f.vy * dt;
+    if (Math.random() < dt * 0.5){ f.vx = rnd(-10, 10); f.vy = rnd(-8, 8); }
+    if (f.x < 30) f.x = WORLD_W - 40; else if (f.x > WORLD_W - 30) f.x = 40;
+    if (f.y < 40) f.y = WORLD_H - 50; else if (f.y > WORLD_H - 40) f.y = 55;
+  }
+}
+function drawNight(vb){
+  var nf = DAY.nightF();
+  if (nf <= 0.02) return;
+  var i;
+  /* 반짝이는 별 */
+  ctx.save();
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.globalCompositeOperation = 'lighter';
+  var st = nightStars();
+  var ox = (G.cam.x * 0.055) % VW, oy = (G.cam.y * 0.04) % (VH * 0.85);
+  for (i = 0; i < st.length; i++){
+    var s = st[i];
+    var tw = 0.4 + 0.6 * Math.abs(Math.sin(G.t * s.sp + s.ph));
+    var sx = ((s.x * VW - ox) % VW + VW) % VW;
+    var sy = ((s.y * VH * 0.85 - oy) % (VH * 0.85) + VH * 0.85) % (VH * 0.85);
+    ctx.globalAlpha = nf * tw * 0.92;
+    ctx.fillStyle = '#e4ecff';
+    circle(sx, sy, s.r); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+  /* 밤에 빛나는 농장 */
+  if (nf > 0.15){
+    var spots = [
+      [INCUB.x, INCUB.y, 130, 'rgba(255,226,150,'],
+      [210, 760, 120, 'rgba(255,196,120,'],
+      [810, 286, 74, 'rgba(150,215,255,']
+    ];
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    for (i = 0; i < spots.length; i++){
+      var sp = spots[i];
+      if (sp[0] < vb.x0 - 200 || sp[0] > vb.x1 + 200 || sp[1] < vb.y0 - 200 || sp[1] > vb.y1 + 200) continue;
+      var gg = ctx.createRadialGradient(sp[0], sp[1], 6, sp[0], sp[1], sp[2]);
+      gg.addColorStop(0, sp[3] + (0.26 * nf) + ')');
+      gg.addColorStop(0.55, sp[3] + (0.10 * nf) + ')');
+      gg.addColorStop(1, sp[3] + '0)');
+      ctx.fillStyle = gg;
+      circle(sp[0], sp[1], sp[2]); ctx.fill();
+    }
+    ctx.restore();
+  }
+  /* 반딧불이 */
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  for (i = 0; i < G.flies.length; i++){
+    var f = G.flies[i];
+    if (f.x < vb.x0 || f.x > vb.x1 || f.y < vb.y0 || f.y > vb.y1) continue;
+    var pl = 0.3 + 0.7 * Math.abs(Math.sin(G.t * f.sp * 1.6 + f.ph));
+    var a = nf * pl;
+    ctx.fillStyle = 'rgba(180,255,140,' + (0.22 * a) + ')';
+    circle(f.x, f.y, 8); ctx.fill();
+    ctx.fillStyle = 'rgba(240,255,200,' + (0.85 * a) + ')';
+    circle(f.x, f.y, 1.7); ctx.fill();
+  }
+  ctx.restore();
+}
+
+/* ---------- 바닥에 떨어진 알 ---------- */
+function drawDrop(d){
+  var cr = RAR[d.r];
+  var pop = easeOut(clamp(d.pop, 0, 1));
+  ctx.save();
+  ctx.translate(d.x, d.y);
+  ctx.fillStyle = 'rgba(0,0,0,.22)';
+  ell(0, 16, 17, 6); ctx.fill();
+  ctx.translate(0, -14 + Math.sin(d.bob) * 5 - (1 - pop) * 24);
+  ctx.scale(pop, pop);
+  ctx.rotate(Math.sin(G.t * 2.4 + d.bob) * 0.08);
+  ctx.shadowColor = rgba(cr.rgb, 0.9);
+  ctx.shadowBlur = 24;
+  var eg = ctx.createRadialGradient(-5, -7, 1, 0, 0, 20);
+  eg.addColorStop(0, '#ffffff');
+  eg.addColorStop(0.5, rgba(cr.rgb, 1));
+  eg.addColorStop(1, cr.dark);
+  ctx.fillStyle = eg;
+  ell(0, 0, 13, 17); ctx.fill();
+  ctx.shadowBlur = 0;
+  var aq;
+  for (aq = 0; aq < 3; aq++){
+    ctx.strokeStyle = 'hsla(' + ((G.t * 70 + aq * 120) % 360) + ',100%,72%,.6)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 20 + aq * 5, 24 + aq * 5, 0, 0, TAU);
+    ctx.stroke();
+  }
+  if (d.m){
+    ctx.strokeStyle = rgba(MUT[d.m].rgb, 0.85);
+    ctx.lineWidth = 2.2;
+    ctx.setLineDash([5, 5]);
+    ctx.lineDashOffset = -G.t * 22;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 17, 21, 0, 0, TAU);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  ctx.restore();
+  if (d.nm) label(d.nm, d.x, d.y - 48, 11.5, '#ffeaa0');
+}
+
+/* ---------- 야생 칠면조 / 킹 고블 ---------- */
+function drawTurkBird(b){
+  var bob = Math.sin(b.bob) * 3.4;
+  ctx.save();
+  ctx.translate(b.x, b.y + bob);
+  ctx.fillStyle = 'rgba(0,0,0,.22)';
+  ell(0, 15, 12, 4.6); ctx.fill();
+  ctx.save();
+  ctx.scale(b.face < 0 ? -1 : 1, 1);
+  ctx.font = '900 27px -apple-system,"Apple Color Emoji","Segoe UI Emoji",sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  if (b.hurt > 0) ctx.globalAlpha = 0.55;
+  ctx.fillText('🦃', 0, 0);
+  ctx.textBaseline = 'alphabetic';
+  ctx.textAlign = 'left';
+  ctx.restore();
+  ctx.restore();
+  if (b.hurt > 0) label('🪶', b.x, b.y - 26, 13, '#ffd7a8');
+}
+
+function drawTurkBoss(b){
+  var pulse = 1 + Math.sin(G.t * 3.2) * 0.035;
+  var col = b.gold ? [255, 214, 90] : [255, 140, 80];
+  ctx.save();
+  ctx.translate(b.x, b.y + Math.sin(b.bob) * 3);
+  var rg = ctx.createRadialGradient(0, 0, 14, 0, 0, 96);
+  rg.addColorStop(0, rgba(col, 0.34));
+  rg.addColorStop(0.6, rgba(col, 0.12));
+  rg.addColorStop(1, rgba(col, 0));
+  ctx.fillStyle = rg;
+  circle(0, 0, 96); ctx.fill();
+  ctx.fillStyle = 'rgba(0,0,0,.26)';
+  ell(0, 44, 34, 11); ctx.fill();
+
+  ctx.save();
+  ctx.scale((b.face < 0 ? -1 : 1) * pulse, pulse);
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.shadowColor = rgba(col, 0.85);
+  ctx.shadowBlur = b.gold ? 30 : 16;
+  if (b.hurt > 0) ctx.globalAlpha = 0.6;
+  ctx.font = '900 78px -apple-system,"Apple Color Emoji","Segoe UI Emoji",sans-serif';
+  ctx.fillText('🦃', 0, 0);
+  ctx.globalAlpha = 1;
+  ctx.shadowBlur = 0;
+  ctx.font = '900 30px -apple-system,"Apple Color Emoji","Segoe UI Emoji",sans-serif';
+  ctx.fillText('👑', 0, -48);
+  ctx.textBaseline = 'alphabetic';
+  ctx.textAlign = 'left';
+  ctx.restore();
+
+  var w = 86, hp = clamp(b.hp / b.max, 0, 1);
+  ctx.fillStyle = 'rgba(8,12,20,.86)';
+  rr(-w / 2, -98, w, 12, 6); ctx.fill();
+  ctx.fillStyle = b.gold ? '#ffd35e' : '#ff7b4d';
+  rr(-w / 2 + 2, -96, (w - 4) * hp, 8, 4); ctx.fill();
+  ctx.restore();
+  label((b.gold ? '골든 킹 고블 ' : '킹 고블 ') + Math.max(0, b.hp) + '/' + b.max, b.x, b.y - 108, 12.5, b.gold ? '#ffeaa0' : '#ffd0b0');
+}
+
+function drawTurkeys(vb){
+  if (!TK.active) return;
+  for (var i = 0; i < TK.birds.length; i++){
+    var b = TK.birds[i];
+    if (b.x < vb.x0 || b.x > vb.x1 || b.y < vb.y0 || b.y > vb.y1) continue;
+    drawTurkBird(b);
+  }
+  if (TK.boss) drawTurkBoss(TK.boss);
+}
+
 /* =========================================================
    17. World drawing
    ========================================================= */
@@ -1467,6 +2139,12 @@ function drawWorld(){
   drawBiomeEdges(vb);
   drawSafeLine();
 
+  applyDayTint();
+  drawNight(vb);
+
+  /* dropped eggs */
+  for (i = 0; i < G.drops.length; i++) drawDrop(G.drops[i]);
+
   /* traps */
   for (i = 0; i < G.traps.length; i++) drawTrap(G.traps[i]);
 
@@ -1486,6 +2164,8 @@ function drawWorld(){
     if (g.x < vb.x0 || g.x > vb.x1 || g.y < vb.y0 || g.y > vb.y1) continue;
     drawGuardian(g);
   }
+
+  drawTurkeys(vb);
 
   drawPlayer();
 
@@ -1514,20 +2194,24 @@ function drawWorld(){
   ctx.textAlign = 'left';
 
   drawPointers();
+  drawEventPointers();
 }
 
 function drawPenGround(vb){
+  var ps = (state.skin === 'turkey')
+    ? { a:'#7c5a2b', b:'#966d35', c:'#6b4f26', stripe:'#ffe2a8', light:'rgba(255,214,140,.22)', tuft:'rgba(74,48,18,.55)', tuft2:'rgba(255,214,150,.4)' }
+    : { a:'#3f7c46', b:'#4d9152', c:'#3b7342', stripe:'#eaffd0', light:'rgba(255,246,190,.16)', tuft:'rgba(24,74,38,.5)', tuft2:'rgba(168,232,150,.35)' };
   var g = ctx.createLinearGradient(0, 0, 0, WORLD_H);
-  g.addColorStop(0, '#3f7c46');
-  g.addColorStop(0.5, '#4d9152');
-  g.addColorStop(1, '#3b7342');
+  g.addColorStop(0, ps.a);
+  g.addColorStop(0.5, ps.b);
+  g.addColorStop(1, ps.c);
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, SAFE_X, WORLD_H);
 
   /* mowed lawn stripes */
   ctx.save();
   ctx.globalAlpha = 0.032;
-  ctx.fillStyle = '#eaffd0';
+  ctx.fillStyle = ps.stripe;
   for (var sx = -200; sx < PEN_X1 + 200; sx += 168){
     ctx.beginPath();
     ctx.moveTo(sx, 0);
@@ -1541,7 +2225,7 @@ function drawPenGround(vb){
 
   /* soft light */
   var rg = ctx.createRadialGradient(500, 400, 40, 500, 400, 620);
-  rg.addColorStop(0, 'rgba(255,246,190,.16)');
+  rg.addColorStop(0, ps.light);
   rg.addColorStop(1, 'rgba(255,246,190,0)');
   ctx.fillStyle = rg;
   ctx.fillRect(0, 0, SAFE_X, WORLD_H);
@@ -1565,7 +2249,7 @@ function drawPenGround(vb){
     var d = G.decoPen[i];
     if (d.x < pvb.x0 || d.x > pvb.x1 || d.y < pvb.y0 || d.y > pvb.y1) continue;
     if (d.t < 0.62){
-      ctx.strokeStyle = 'rgba(24,74,38,.5)';
+      ctx.strokeStyle = ps.tuft;
       ctx.lineWidth = 2.4;
       ctx.beginPath();
       ctx.moveTo(d.x, d.y);
@@ -1575,7 +2259,7 @@ function drawPenGround(vb){
       ctx.moveTo(d.x + 1, d.y);
       ctx.quadraticCurveTo(d.x + 1 * d.s, d.y - 12 * d.s, d.x + 2 * d.s, d.y - 17 * d.s);
       ctx.stroke();
-      ctx.strokeStyle = 'rgba(168,232,150,.35)';
+      ctx.strokeStyle = ps.tuft2;
       ctx.lineWidth = 1.4;
       ctx.beginPath();
       ctx.moveTo(d.x + 1, d.y - 2);
@@ -2105,7 +2789,7 @@ function drawNest(n){
     ctx.rotate(Math.sin(G.t * 1.5 + n.ph) * 0.07);
 
     ctx.shadowColor = rgba(rr2.rgb, 0.85);
-    ctx.shadowBlur = 9 + n.r * 4;
+    ctx.shadowBlur = 9 + n.r * 4 + (n.r === 6 ? 16 : 0);
     var gradient = ctx.createRadialGradient(-5, -8, 2, 0, 0, 22);
     gradient.addColorStop(0, '#ffffff');
     gradient.addColorStop(0.45, rgba(rr2.rgb, 1));
@@ -2138,10 +2822,30 @@ function drawNest(n){
       ctx.fillText(MUT[n.m].emo, 0, -24);
       ctx.textAlign = 'left';
     }
+
+    if (n.r === 6){
+      /* 무지개 오라 */
+      for (var aq = 0; aq < 3; aq++){
+        ctx.strokeStyle = 'hsla(' + ((G.t * 70 + aq * 120) % 360) + ',100%,72%,.55)';
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 24 + aq * 6 + Math.sin(G.t * 2 + aq) * 2, 29 + aq * 7, 0, 0, TAU);
+        ctx.stroke();
+      }
+      ctx.textAlign = 'center';
+      for (var st2 = 0; st2 < 4; st2++){
+        var sa2 = G.t * 1.5 + st2 * TAU / 4;
+        ctx.fillStyle = 'rgba(255,255,220,' + (0.55 + 0.45 * Math.sin(G.t * 4 + st2)) + ')';
+        ctx.font = '900 10px -apple-system,sans-serif';
+        ctx.fillText('✦', Math.cos(sa2) * 31, Math.sin(sa2) * 37);
+      }
+      ctx.textAlign = 'left';
+    }
     ctx.restore();
 
     /* rarity label */
     label(rr2.n, 0, 36, 12.5, rgba(rr2.rgb, 1));
+    if (n.nm) label(n.nm, 0, 54, 11.5, '#ffeaa0');
   } else {
     /* empty + timer */
     var left = Math.max(0, n.respawn);
@@ -2522,6 +3226,47 @@ function drawPointers(){
   }
 }
 
+/* ---------- 이벤트 포인터 ---------- */
+function drawEventPointers(){
+  var p = G.player, i;
+  if (TK.active && TK.boss){
+    drawEdgeArrow(TK.boss.x, TK.boss.y, '🦃 ' + Math.max(0, TK.boss.hp), '#ffbe7a');
+  }
+  if (!p.carry){
+    for (i = 0; i < G.drops.length; i++){
+      drawEdgeArrow(G.drops[i].x, G.drops[i].y, '✨', '#ffeaa0');
+    }
+  }
+  if (TK.active){
+    for (i = 0; i < TK.birds.length && i < 3; i++){
+      drawEdgeArrow(TK.birds[i].x, TK.birds[i].y, '🦃', 'rgba(255,190,120,.8)');
+    }
+  }
+}
+function drawEdgeArrow(wx, wy, txt, col){
+  var s = w2s(wx, wy);
+  if (s.x > -24 && s.x < VW + 24 && s.y > -24 && s.y < VH + 24) return;
+  var cx = clamp(s.x, 30, VW - 30), cy = clamp(s.y, 92, VH - 100);
+  var ang = Math.atan2(s.y - cy, s.x - cx);
+  ctx.save();
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.translate(cx, cy);
+  ctx.rotate(ang);
+  ctx.fillStyle = col;
+  ctx.beginPath();
+  ctx.moveTo(10, 0); ctx.lineTo(-6, 6); ctx.lineTo(-2, 0); ctx.lineTo(-6, -6);
+  ctx.closePath(); ctx.fill();
+  ctx.restore();
+  ctx.save();
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.fillStyle = col;
+  ctx.font = '900 10px -apple-system,"Apple SD Gothic Neo",sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(txt, cx, cy + 21);
+  ctx.textAlign = 'left';
+  ctx.restore();
+}
+
 /* =========================================================
    18. Screen space fx
    ========================================================= */
@@ -2607,11 +3352,42 @@ function updateHUD(){
     if (state.traps <= 0) tb.classList.add('dim'); else tb.classList.remove('dim');
   }
 
+  /* time of day */
+  var ph = DAY.phase();
+  if (hudCache.tod !== ph.id){
+    hudCache.tod = ph.id;
+    var tp = document.getElementById('todPill');
+    if (tp && tp.classList) tp.className = 'pill tod-' + ph.id;
+    upd('todEmo', ph.emo);
+    upd('todTxt', ph.name);
+  }
+
+  /* turkey event chip */
+  var evTxt, evHot;
+  if (TK.active){ evTxt = '킹 고블 ' + Math.max(0, Math.ceil(TK.t)) + 's'; evHot = true; }
+  else { evTxt = '다음 ' + Math.max(0, Math.ceil(TK.next)) + 's'; evHot = TK.next < 25; }
+  if (hudCache.evt !== evTxt){ hudCache.evt = evTxt; upd('eventTxt', evTxt); }
+  if (hudCache.evHot !== evHot){
+    hudCache.evHot = evHot;
+    var eb = document.getElementById('btnEvent');
+    if (eb && eb.classList){ if (evHot) eb.classList.add('hot'); else eb.classList.remove('hot'); }
+  }
+
+  /* feathers */
+  var fTxt = fmt(state.feathers);
+  if (hudCache.fth !== fTxt){
+    hudCache.fth = fTxt;
+    upd('featherTxt', fTxt);
+    var fb = document.getElementById('btnFeather');
+    if (fb && fb.classList){ if (state.feathers > 0) fb.classList.remove('dim'); else fb.classList.add('dim'); }
+  }
+
   /* main button */
   var emo = '🥚', label = '훔치기', mode = '';
   var p = G.player;
   if (p.state === 'steal'){ emo = '✋'; label = '훔치는 중'; mode = 'dim'; }
   else if (p.state === 'hatch'){ emo = '🐣'; label = '부화 중'; mode = 'hatch'; }
+  else if (TK.active && tkTarget()){ emo = '🦃'; label = '공격!'; mode = 'ready'; }
   else if (p.carry){
     if (inSafe()){ emo = '🐣'; label = '부화하기'; mode = 'hatch ready'; }
     else { emo = '🏃'; label = '도망!'; mode = 'dim'; }
@@ -2660,7 +3436,7 @@ function draw(){
 var ui = { open:false, kind:null, fuseSel:[], confirmReset:false };
 
 function openModal(kind){
-  if (kind === 'fuse' || kind === 'dex' || kind === 'shop' || kind === 'set'){
+  if (kind === 'fuse' || kind === 'dex' || kind === 'shop' || kind === 'set' || kind === 'turkey'){
     audioInit();
     ui.open = true;
     ui.kind = kind;
@@ -2670,6 +3446,7 @@ function openModal(kind){
     if (kind === 'shop') renderShop();
     else if (kind === 'dex') renderDex();
     else if (kind === 'fuse') renderFuse();
+    else if (kind === 'turkey') renderTurkey();
     else renderSet();
     SFX.click();
   }
@@ -2696,6 +3473,12 @@ function upgRow(k, emo, name, lv, desc, cost, maxed, afford){
 function renderShop(){
   var m = state.money;
   var html = '';
+
+  html += '<div class="sect">이벤트</div>';
+  html += '<div class="row"><div class="em">🦃</div><div class="info">' +
+    '<div class="nm">터키 상점 <span class="lv">🪶 ' + fmt(state.feathers) + '</span></div>' +
+    '<div class="ds">깃털로 메이플 변이 · Cornuclaw · Mapleleaf Moose · 터키 농장 스킨</div></div>' +
+    '<button class="buy fth" data-act="topen">열기</button></div>';
 
   html += '<div class="sect">스피드</div>';
   var tl = state.upg.tread;
@@ -2735,13 +3518,13 @@ function renderShop(){
 }
 
 function renderDex(){
-  var found = 0, total = 18, html = '', r, mm;
-  for (r = 0; r < 6; r++) for (mm = 0; mm < 3; mm++) if (state.dex[r + '_' + mm]) found++;
+  var found = 0, total = RAR.length * MUT.length, html = '', r, mm;
+  for (r = 0; r < RAR.length; r++) for (mm = 0; mm < MUT.length; mm++) if (state.dex[r + '_' + mm]) found++;
 
   html += '<div class="sect">도감 ' + found + ' / ' + total + '</div>';
   html += '<div class="dexGrid">';
-  for (r = 0; r < 6; r++){
-    for (mm = 0; mm < 3; mm++){
+  for (r = 0; r < RAR.length; r++){
+    for (mm = 0; mm < MUT.length; mm++){
       var key = r + '_' + mm;
       var cnt = state.dex[key] || 0;
       var mut = MUT[mm];
@@ -2817,6 +3600,37 @@ function renderFuse(){
   setModal('⚗️ 펫 퓨즈', html);
 }
 
+function renderTurkey(){
+  var html = '';
+  html += '<div class="sect">🦃 터키 테이크오버</div>';
+  if (TK.active){
+    var hpTxt = TK.boss ? ('킹 고블 ' + Math.max(0, TK.boss.hp) + ' / ' + TK.boss.max) : '킹 고블 처치 완료!';
+    var hpPct = TK.boss ? clamp(TK.boss.hp / TK.boss.max, 0, 1) * 100 : 0;
+    html += '<div class="row"><div class="em">' + (TK.golden ? '👑' : '🦃') + '</div><div class="info">' +
+      '<div class="nm">' + hpTxt + (TK.golden ? ' <span class="lv">골든 · 보상 2배</span>' : '') + '</div>' +
+      '<div class="ds">남은 시간 ' + Math.max(0, Math.ceil(TK.t)) + '초 · 야생 칠면조 ' + TK.birds.length + '마리</div>' +
+      '<div class="tkHp"><i style="width:' + hpPct.toFixed(0) + '%"></i></div></div></div>';
+    html += '<div class="help" style="margin:2px 0 10px">킹 고블에게 다가가 <b>🦃 공격</b> 버튼을 연타하세요. 처치하면 <b>Divine King Gobble</b> 알이 떨어지고 깃털을 잔뜩 받아요.</div>';
+  } else {
+    html += '<div class="row"><div class="em">🦃</div><div class="info"><div class="nm">다음 이벤트까지 ' + Math.max(0, Math.ceil(TK.next)) + '초</div><div class="ds">기다리지 않고 바로 시작할 수도 있어요</div></div></div>';
+    html += '<button class="bigbtn" data-act="tstart">🦃 지금 이벤트 시작</button>';
+  }
+
+  html += '<div class="sect" style="margin-top:14px">🪶 내 깃털 ' + fmt(state.feathers) + '</div>';
+  for (var i = 0; i < TKSHOP.length; i++){
+    var it = TKSHOP[i];
+    var owned = (it.k === 'skin' && state.skin === 'turkey');
+    var afford = state.feathers >= it.cost;
+    var btn = owned
+      ? '<button class="buy max" disabled>적용중</button>'
+      : '<button class="buy fth" data-act="tbuy" data-k="' + it.k + '"' + (afford ? '' : ' disabled') + '>🪶 ' + it.cost + '</button>';
+    html += '<div class="row"><div class="em">' + it.emo + '</div><div class="info">' +
+      '<div class="nm">' + it.n + '</div><div class="ds">' + it.ds + '</div></div>' + btn + '</div>';
+  }
+  html += '<div class="help" style="margin-top:8px">이벤트는 90초 진행되고, 끝나면 몇 분 뒤 다시 시작해요. 깃털은 저장됩니다.</div>';
+  setModal('🦃 터키 상점', html);
+}
+
 function renderSet(){
   var html = '';
   html += '<div class="row"><div class="em">' + (state.muted ? '🔇' : '🔊') + '</div><div class="info">' +
@@ -2830,6 +3644,9 @@ function renderSet(){
     '<b>행동</b> 오른쪽 큰 버튼 · <kbd>E</kbd> / <kbd>Space</kbd> — 알 훔치기, 부화<br>' +
     '<b>덫</b> 🪤 버튼 · <kbd>Q</kbd> — 쫓아오는 수호자를 3초 기절<br>' +
     '<b>단축키</b> <kbd>I</kbd> 도감 · <kbd>B</kbd> 상점 · <kbd>F</kbd> 퓨즈 · <kbd>M</kbd> 음소거<br>' +
+    '<b>낮/밤</b> 4분마다 아침→낮→저녁→밤이 돌아와요. 밤엔 별·반딧불이와 알의 발광이 빛나고 디바인 알이 더 자주 나와요.<br>' +
+    '<b>디바인</b> 최상위 등급. 높은 구역에 계속 다시 스폰돼요.<br>' +
+    '<b>터키</b> 🦃 버튼 — 이벤트 시작·터키 상점. 킹 고블을 때려 깃털과 디바인 알을 얻으세요.<br>' +
     '</div>';
 
   html += '<div class="sect" style="margin-top:14px">게임 정보</div>';
@@ -2871,6 +3688,12 @@ function renderSet(){
     } else if (act === 'reset'){
       if (!ui.confirmReset){ ui.confirmReset = true; SFX.no(); renderSet(); }
       else resetGame();
+    } else if (act === 'tstart'){
+      if (startTurkeyEvent()) renderTurkey();
+    } else if (act === 'tbuy'){
+      tkBuy(el.getAttribute('data-k'));
+    } else if (act === 'topen'){
+      openModal('turkey');
     }
   });
 })();
@@ -2897,12 +3720,16 @@ function resetGame(){
   state.muted = keepMute;
   G.player.carry = null; G.player.state = 'idle'; G.player.x = 500; G.player.y = 525;
   G.player.vx = 0; G.player.vy = 0;
-  G.traps = []; G.parts = []; G.floats = [];
+  G.traps = []; G.parts = []; G.floats = []; G.drops = [];
   G.cam.x = 500; G.cam.y = 525;
   G.lastBiome = -1; G.idleT = 0;
+  endTurkeyEvent(true);
+  TK.next = TKD.NEXT0;
+  G.divineT = 16;
+  DAY.t = 0.02;
   buildWorld();
   closeModal();
-  hudCache = { money:'', inc:'', sp:'', req:'', trap:'', label:'', emo:'', mood:'' };
+  hudCache = { money:'', inc:'', sp:'', req:'', trap:'', label:'', emo:'', mood:'', tod:'', evt:'', evHot:null, fth:'' };
   toast('🔄 처음부터 다시 시작합니다', 'good');
   saveNow();
 }
@@ -2927,7 +3754,7 @@ function pumpReveal(){
   card.style.setProperty('--rc', rgba(col, 0.55));
   card.style.setProperty('--rcbg', rgba(col, 0.28));
   document.getElementById('revealEmo').textContent = pet.e;
-  document.getElementById('revealName').textContent = r.n + ' 펫';
+  document.getElementById('revealName').textContent = pet.nm ? pet.nm : (r.n + ' 펫');
   document.getElementById('revealName').style.color = rgba(r.rgb, 1);
   var mutEl = document.getElementById('revealMut');
   if (pet.m){
@@ -2936,7 +3763,7 @@ function pumpReveal(){
   } else {
     mutEl.textContent = '';
   }
-  document.getElementById('revealMeta').textContent = '무게 ' + pet.w.toFixed(1) + 'kg · 수입 +$' + fmt1(pet.inc) + '/s';
+  document.getElementById('revealMeta').textContent = (pet.nm ? r.n + ' · ' : '') + '무게 ' + pet.w.toFixed(1) + 'kg · 수입 +$' + fmt1(pet.inc) + '/s';
   document.getElementById('revealInc').textContent = '총 수입 +$' + fmt1(incomePerSec()) + '/s';
   var badge = document.getElementById('revealBadge');
   if (item.isNew) badge.classList.remove('hidden'); else badge.classList.add('hidden');
@@ -2967,6 +3794,7 @@ function frame(ts){
     update(dt);
   } else {
     G.t += dt;
+    DAY.advance(dt);
     updateFX(dt);
     updateCamera(dt);
     updateToasts(dt);
@@ -2987,6 +3815,15 @@ function bindUI(){
   if (bf) bf.addEventListener('click', function(){ if (G.started) openModal('fuse'); });
   var bm = document.getElementById('btnMute');
   if (bm) bm.addEventListener('click', function(){ toggleMute(); });
+  var be = document.getElementById('btnEvent');
+  if (be) be.addEventListener('click', function(){
+    if (!G.started) return;
+    audioInit();
+    if (TK.active) openModal('turkey');
+    else startTurkeyEvent();
+  });
+  var bfe = document.getElementById('btnFeather');
+  if (bfe) bfe.addEventListener('click', function(){ if (G.started) openModal('turkey'); });
   var bt = document.getElementById('btnSet');
   if (bt) bt.addEventListener('click', function(){ if (G.started) openModal('set'); });
   var mc = document.getElementById('modalClose');
@@ -3051,9 +3888,11 @@ function init(){
   requestAnimationFrame(frame);
 }
 
-window.__game = { G:G, get state(){ return state; }, BIOMES:BIOMES, RAR:RAR, doAction:doAction, placeTrap:placeTrap,
-  openModal:openModal, closeModal:closeModal, startGame:startGame, saveNow:saveNow, doFuse:doFuse, buyUpgrade:buyUpgrade,
-  capacity:capacity, incomePerSec:incomePerSec, playerSpeedNow:playerSpeedNow, TREAD:TREAD, fmt:fmt };
+window.__game = { G:G, get state(){ return state; }, BIOMES:BIOMES, RAR:RAR, MUT:MUT, DAY:DAY, TK:TK, TKD:TKD, TKSHOP:TKSHOP,
+  doAction:doAction, placeTrap:placeTrap, openModal:openModal, closeModal:closeModal, startGame:startGame, saveNow:saveNow,
+  doFuse:doFuse, buyUpgrade:buyUpgrade, startTurkeyEvent:startTurkeyEvent, tkAttack:tkAttack, tkBuy:tkBuy, renderTurkey:renderTurkey,
+  closeReveal:closeReveal,
+  addDrop:addDrop, capacity:capacity, incomePerSec:incomePerSec, playerSpeedNow:playerSpeedNow, TREAD:TREAD, fmt:fmt };
 
 init();
 })();
