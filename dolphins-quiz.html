@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a5a7d">
+<meta name="description" content="Magic Tree House #9 Dolphins at Daybreak — 20-question English quiz">
+<title>Dolphins at Daybreak — English Quiz (20 Questions)</title>
+<style>
+  :root{
+    --deep:#052f45; --sea:#0a6285; --teal:#0fa3b8; --aqua:#7ce0d3;
+    --foam:#f4fbfd; --card:#ffffff; --ink:#0d2b3a; --muted:#5f7f8d;
+    --line:#dceef3; --green:#1a9e6c; --green-bg:#e8f8f0; --red:#d94f3d; --red-bg:#fdece9;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard",system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:
+      radial-gradient(1200px 600px at 10% -10%, #d8f4fb 0%, rgba(216,244,251,0) 60%),
+      radial-gradient(900px 500px at 100% 0%, #e6fbf6 0%, rgba(230,251,246,0) 55%),
+      var(--foam);
+    -webkit-tap-highlight-color:transparent;
+    padding-bottom:calc(96px + env(safe-area-inset-bottom));
+    line-height:1.5;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative; overflow:hidden; color:#fff; text-align:center;
+    background:linear-gradient(160deg,#04273b 0%, #0a5a7d 42%, #11a1b6 76%, #57d6cd 100%);
+    padding:calc(26px + env(safe-area-inset-top)) 20px 62px;
+  }
+  .hero::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(420px 240px at 82% 8%, rgba(255,255,255,.18), transparent 70%),
+      radial-gradient(340px 200px at 12% 92%, rgba(124,224,211,.30), transparent 70%);
+  }
+  .hero-inner{position:relative; z-index:2; max-width:720px; margin:0 auto;}
+  .kicker{
+    margin:0; display:inline-block; padding:5px 12px; border-radius:99px;
+    font-size:10.5px; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
+    color:#c8f3fa; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.2);
+  }
+  h1{
+    margin:14px 0 6px; font-size:clamp(27px,7.8vw,44px); line-height:1.1;
+    font-weight:800; letter-spacing:-.02em;
+  }
+  .hero-sub{margin:0; font-size:13.5px; font-weight:600; color:#c6f1f7;}
+  .dolphin{
+    display:block; width:168px; height:auto; margin:2px auto 10px;
+    filter:drop-shadow(0 10px 18px rgba(0,20,32,.28));
+    animation:bob 4.5s ease-in-out infinite;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg);}50%{transform:translateY(-9px) rotate(2deg);}}
+  @media (prefers-reduced-motion:reduce){ .dolphin{animation:none;} }
+  .hero-waves{position:absolute; left:0; right:0; bottom:-1px; width:100%; height:64px; z-index:1; display:block;}
+
+  /* ---------- Progress ---------- */
+  .progress{
+    position:sticky; top:0; z-index:30;
+    background:rgba(244,251,253,.88);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .progress-inner{
+    max-width:720px; margin:0 auto; padding:10px 18px;
+    display:flex; align-items:center; gap:12px;
+  }
+  .progress-text{font-size:12.5px; font-weight:800; color:var(--sea); white-space:nowrap;}
+  .track{flex:1; height:8px; border-radius:99px; background:#dceef3; overflow:hidden;}
+  .fill{
+    height:100%; width:0%; border-radius:99px;
+    background:linear-gradient(90deg,#0fa3b8,#57d6cd);
+    transition:width .25s ease;
+  }
+
+  /* ---------- Layout ---------- */
+  main{max-width:720px; margin:0 auto; padding:18px 16px 4px;}
+  .intro{
+    display:flex; align-items:center; gap:8px; margin:0 2px 16px;
+    font-size:12.5px; color:var(--muted);
+  }
+  .intro svg{flex:0 0 auto;}
+
+  /* ---------- Result ---------- */
+  .result{
+    display:none; margin:0 0 18px; padding:24px 18px 22px; border-radius:22px;
+    text-align:center; color:#fff;
+    background:linear-gradient(150deg,#062f45,#0a6184 58%,#12a3b8);
+    box-shadow:0 14px 30px rgba(8,60,84,.22);
+  }
+  .result.show{display:block; animation:pop .32s ease both;}
+  @keyframes pop{from{opacity:0; transform:translateY(10px) scale(.985);}to{opacity:1; transform:none;}}
+  .score-line{display:flex; align-items:baseline; justify-content:center; gap:6px;}
+  .score-num{font-size:clamp(46px,15vw,66px); font-weight:800; letter-spacing:-.03em; line-height:1;}
+  .score-den{font-size:20px; font-weight:800; color:#a9ecf7;}
+  .score-pct{
+    display:inline-block; margin-top:10px; padding:4px 12px; border-radius:99px;
+    font-size:12px; font-weight:700; color:#e6fbff; background:rgba(255,255,255,.16);
+  }
+  .score-msg{margin:12px 0 0; font-size:16px; font-weight:800;}
+  .chips{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:12px;}
+  .chip{font-size:12.5px; font-weight:700; padding:5px 12px; border-radius:99px; background:rgba(255,255,255,.14);}
+  .chip.ok{background:rgba(87,214,205,.26);}
+  .chip.no{background:rgba(224,102,85,.30);}
+  .score-note{margin:12px 0 0; font-size:12.5px; line-height:1.55; color:#c6f1f7;}
+
+  /* ---------- Cards ---------- */
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px 15px 14px; margin-bottom:14px;
+    box-shadow:0 6px 18px rgba(9,62,84,.05);
+    transition:border-color .2s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .card.correct{border-color:#9fe3c4; background:#fbfffd;}
+  .card.wrong{border-color:#f6c3bb; background:#fffcfb;}
+  .q-head{display:flex; gap:10px; align-items:flex-start; margin-bottom:12px;}
+  .q-num{
+    flex:0 0 auto; width:30px; height:30px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12.5px; font-weight:800; color:#fff;
+    background:linear-gradient(145deg,#0fa3b8,#0a6285);
+    box-shadow:0 3px 8px rgba(10,98,133,.24);
+  }
+  .card.correct .q-num{background:linear-gradient(145deg,#2bb37e,#15855a); box-shadow:0 3px 8px rgba(21,133,90,.24);}
+  .card.wrong .q-num{background:linear-gradient(145deg,#e06655,#c03a2a); box-shadow:0 3px 8px rgba(192,58,42,.24);}
+  .q-text{margin:0; font-size:16px; line-height:1.45; font-weight:700; letter-spacing:-.005em; word-break:break-word;}
+  .options{display:flex; flex-direction:column; gap:8px;}
+  .opt{
+    display:flex; align-items:center; gap:10px; width:100%; min-height:52px;
+    padding:10px 12px; text-align:left; font:inherit; font-size:14.5px; line-height:1.35;
+    color:var(--ink); background:#f7fcfd; border:1.5px solid #e3f0f4; border-radius:13px;
+    cursor:pointer; -webkit-appearance:none; appearance:none;
+    transition:border-color .15s ease, background .15s ease, box-shadow .15s ease;
+  }
+  .opt:hover{border-color:#b9e2ea; background:#f2fbfd;}
+  .opt:focus-visible{outline:3px solid rgba(15,163,184,.35); outline-offset:2px;}
+  .opt:active{transform:scale(.995);}
+  .letter{
+    flex:0 0 auto; width:26px; height:26px; border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:800; color:var(--sea);
+    background:#e6f5f9; border:1px solid #d3ebf1; text-transform:uppercase;
+  }
+  .opt-label{flex:1 1 auto;}
+  .mark{margin-left:auto; padding-left:6px; font-size:15px; font-weight:800;}
+  .opt[aria-pressed="true"]{border-color:#0fa3b8; background:#e9f8fb; box-shadow:0 0 0 3px rgba(15,163,184,.12);}
+  .opt[aria-pressed="true"] .letter{background:#0fa3b8; color:#fff; border-color:#0fa3b8;}
+  .opt.correct{border-color:#2bb37e; background:var(--green-bg); box-shadow:none;}
+  .opt.correct .letter{background:#2bb37e; color:#fff; border-color:#2bb37e;}
+  .opt.correct .mark{color:var(--green);}
+  .opt.wrong{border-color:#e06655; background:var(--red-bg); box-shadow:none;}
+  .opt.wrong .letter{background:#e06655; color:#fff; border-color:#e06655;}
+  .opt.wrong .mark{color:var(--red);}
+  .opt:disabled{cursor:default;}
+  .card.correct .opt:not(.correct):not(.wrong){opacity:.6;}
+  .card.wrong .opt:not(.correct):not(.wrong){opacity:.5;}
+  .feedback{
+    display:none; margin:10px 0 0; padding:9px 12px; border-radius:11px;
+    font-size:13px; line-height:1.5; color:var(--muted); background:#f4fbfd; word-break:break-word;
+  }
+  .feedback.show{display:block;}
+  .card.correct .feedback{color:#15795a; background:#eefaf4;}
+  .card.wrong .feedback{color:#a83a2b; background:#fdeeea;}
+  .feedback b{font-weight:800;}
+
+  /* ---------- Action bar ---------- */
+  .actionbar{
+    position:fixed; left:0; right:0; bottom:0; z-index:40;
+    padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    background:rgba(255,255,255,.93);
+    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);
+  }
+  .actionbar-inner{max-width:720px; margin:0 auto; display:flex; gap:10px;}
+  .btn{
+    flex:1 1 auto; min-height:52px; padding:0 14px; border-radius:14px;
+    font:inherit; font-size:15.5px; font-weight:800; border:1.5px solid transparent;
+    cursor:pointer; -webkit-appearance:none; appearance:none;
+    transition:transform .12s ease, background .2s ease, color .2s ease, box-shadow .2s ease;
+  }
+  .btn:active{transform:scale(.985);}
+  .btn:focus-visible{outline:3px solid rgba(15,163,184,.35); outline-offset:2px;}
+  .btn-primary{
+    flex:1 1 62%; color:#fff;
+    background:linear-gradient(145deg,#12a3b8,#0a6184);
+    box-shadow:0 8px 18px rgba(10,97,132,.28);
+  }
+  .btn-primary:disabled{background:#cfdfe5; color:#7e97a2; box-shadow:none; cursor:default;}
+  .btn-ghost{flex:0 0 34%; color:var(--sea); background:#eef8fb; border-color:#d5ebf1;}
+
+  .toast{
+    position:fixed; left:50%; bottom:calc(84px + env(safe-area-inset-bottom)); z-index:50;
+    transform:translate(-50%,10px); opacity:0; pointer-events:none;
+    padding:10px 16px; border-radius:99px; white-space:nowrap;
+    font-size:13px; font-weight:700; color:#fff; background:#0a3348;
+    box-shadow:0 8px 20px rgba(5,47,69,.28);
+    transition:opacity .2s ease, transform .2s ease;
+  }
+  .toast.show{opacity:1; transform:translate(-50%,0);}
+
+  footer{
+    max-width:720px; margin:0 auto; padding:10px 18px 22px;
+    text-align:center; font-size:11.5px; line-height:1.6; color:#8aa7b3;
+  }
+
+  @media (min-width:600px){
+    .card{padding:20px 20px 16px; margin-bottom:16px;}
+    .q-text{font-size:17px;}
+    .opt{font-size:15px; min-height:54px;}
+    main{padding:22px 20px 4px;}
+  }
+</style>
+</head>
+<body>
+  <header class="hero" id="top">
+    <svg class="dolphin" viewBox="0 0 240 130" role="img" aria-label="dolphin">
+      <defs>
+        <linearGradient id="dBody" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#bff3fb"/>
+          <stop offset="0.55" stop-color="#7ce0d3"/>
+          <stop offset="1" stop-color="#2fb6c4"/>
+        </linearGradient>
+      </defs>
+      <circle cx="31" cy="38" r="5" fill="rgba(255,255,255,.55)"/>
+      <circle cx="20" cy="58" r="3.4" fill="rgba(255,255,255,.4)"/>
+      <circle cx="36" cy="72" r="2.4" fill="rgba(255,255,255,.3)"/>
+      <path d="M40 76 C60 46 96 30 132 36 C145 27 162 24 179 29 C190 32 198 39 202 48 C192 55 184 58 176 60 C183 66 191 71 201 75 C185 83 168 83 154 76 C140 92 112 100 86 96 C66 93 50 87 40 76 Z" fill="url(#dBody)"/>
+      <path d="M124 36 C124 22 134 12 150 8 C147 22 149 31 156 37 C146 41 134 41 124 36 Z" fill="#8ee9de"/>
+      <path d="M84 92 C92 102 96 108 96 118 C84 114 74 106 68 98 C73 95 78 93 84 92 Z" fill="#4ccbd0"/>
+      <circle cx="183" cy="44" r="2.8" fill="#063346"/>
+      <path d="M196 52 C190 56 182 57 176 56" stroke="#0d6e7f" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    </svg>
+    <div class="hero-inner">
+      <p class="kicker">Magic Tree House · Book #9</p>
+      <h1>Dolphins at Daybreak</h1>
+      <p class="hero-sub">영어 퀴즈 · 20 Questions</p>
+    </div>
+    <svg class="hero-waves" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 44 C 180 8 360 8 540 34 C 720 60 900 66 1080 44 C 1260 22 1350 20 1440 30 L1440 80 L0 80 Z" fill="rgba(255,255,255,.14)"/>
+      <path d="M0 60 C 200 34 380 40 560 58 C 760 78 920 74 1100 56 C 1240 42 1360 46 1440 54 L1440 80 L0 80 Z" fill="rgba(255,255,255,.10)"/>
+    </svg>
+  </header>
+
+  <div class="progress" id="progress">
+    <div class="progress-inner">
+      <span class="progress-text" id="progressText">0 / 20 답함</span>
+      <div class="track"><div class="fill" id="progressFill"></div></div>
+    </div>
+  </div>
+
+  <main>
+    <p class="intro">
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#0fa3b8" opacity=".16"/><path d="M12 7.5v5l3 2" stroke="#0a6285" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+      보기를 탭해 답을 고르세요. 정답은 <b>&nbsp;채점하기&nbsp;</b>를 누른 뒤에 보여요.
+    </p>
+
+    <section class="result" id="result" aria-live="polite">
+      <div class="score-line"><span class="score-num" id="scoreNum">0</span><span class="score-den" id="scoreDen">/ 20</span></div>
+      <div><span class="score-pct" id="scorePct">정답률 0%</span></div>
+      <p class="score-msg" id="scoreMsg"></p>
+      <div class="chips">
+        <span class="chip ok" id="chipOk">정답 0</span>
+        <span class="chip no" id="chipNo">오답 0</span>
+      </div>
+      <p class="score-note" id="scoreNote"></p>
+    </section>
+
+    <div id="quiz"></div>
+  </main>
+
+  <footer>
+    Dolphins at Daybreak · Mary Pope Osborne<br>
+    틀린 문제는 채점 후 카드에서 정답을 확인할 수 있어요.
+  </footer>
+
+  <div class="actionbar">
+    <div class="actionbar-inner">
+      <button type="button" class="btn btn-primary" id="checkBtn">채점하기 · Check</button>
+      <button type="button" class="btn btn-ghost" id="resetBtn">다시 풀기</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var QUESTIONS = [
+    {
+      q: "Why did Morgan le Fay call Jack and Annie to the tree house?",
+      opts: [
+        "To find a lost puppy",
+        "To become Master Librarians by solving four riddles",
+        "To visit Merlin in Camelot"
+      ]
+    },
+    {
+      q: "Where did the magic tree house land?",
+      opts: [
+        "On a pink coral reef",
+        "On a pirate ship",
+        "On a snowy island"
+      ]
+    },
+    {
+      q: "How did the mini-sub start moving and dive into the ocean?",
+      opts: [
+        "A giant wave pushed it",
+        "Annie pressed keys on the built-in computer",
+        "Jack turned the steering wheel"
+      ]
+    },
+    {
+      q: "What did Annie name the two dolphins they saw outside the window?",
+      opts: [
+        "Max and Mia",
+        "Splash and Fin",
+        "Sukie and Sam"
+      ]
+    },
+    {
+      q: "What bad news did Jack read in the ship's log on the computer?",
+      opts: [
+        "The sub had cracks in its hull and was meant for a junkyard",
+        "The sub had no fuel left",
+        "A storm was coming"
+      ]
+    },
+    {
+      q: "Which sea creature wrapped its eight arms around the mini-sub and squirted black ink?",
+      opts: [
+        "A giant octopus",
+        "A stingray",
+        "A jellyfish"
+      ]
+    },
+    {
+      q: "What kind of shark chased Jack and Annie while they were swimming back to the reef?",
+      opts: [
+        "A great white shark",
+        "A hammerhead shark",
+        "A tiger shark"
+      ]
+    },
+    {
+      q: "How did Jack and Annie make it safely back to the coral reef when they got too tired to swim?",
+      opts: [
+        "They climbed onto a floating log",
+        "Morgan rescued them with magic",
+        "Sukie and Sam carried them through the water"
+      ]
+    },
+    {
+      q: "What was the answer to Morgan's riddle (\"Rough and gray as rock...\")?",
+      opts: [
+        "A dolphin",
+        "An oyster",
+        "A giant clam"
+      ]
+    },
+    {
+      q: "At the end of the story, what did Annie call \"the true pearl in the oyster\"?",
+      opts: [
+        "The dolphins",
+        "The mini-sub",
+        "The ocean book"
+      ]
+    },
+    {
+      q: "What color was Morgan le Fay's robe when she greeted Jack and Annie?",
+      opts: [
+        "Blue velvet",
+        "Red velvet",
+        "Green silk"
+      ]
+    },
+    {
+      q: "What was the title of the book Morgan left for Jack and Annie?",
+      opts: [
+        "Ocean Guide",
+        "Deep Sea Secrets",
+        "Dolphins of the World"
+      ]
+    },
+    {
+      q: "How is a coral reef built over time, according to Jack's book?",
+      opts: [
+        "From underwater volcanoes",
+        "From stacks of tiny coral skeletons",
+        "From giant seashells"
+      ]
+    },
+    {
+      q: "Why did Jack say dolphins could NOT be the answer to the riddle?",
+      opts: [
+        "Dolphins are too big",
+        "Dolphins have smooth skin, not rough as a rock",
+        "Dolphins live in groups"
+      ]
+    },
+    {
+      q: "Which icon did Annie press on the computer to make the mini-sub start rising?",
+      opts: [
+        "A dolphin icon",
+        "A waves icon",
+        "A star icon"
+      ]
+    },
+    {
+      q: "What did Jack do to make the giant octopus let go of the mini-sub?",
+      opts: [
+        "He tapped on the glass",
+        "He yelled at it",
+        "He flashed a light"
+      ]
+    },
+    {
+      q: "According to the Ocean Guide, how should you swim if you see a shark?",
+      opts: [
+        "Splash loudly to scare it away",
+        "Swim calmly without splashing",
+        "Dive deep under the water"
+      ]
+    },
+    {
+      q: "Where did Jack put his glasses and the book before jumping into the sea?",
+      opts: [
+        "Inside his pocket",
+        "On the mini-sub seat",
+        "Inside his backpack"
+      ]
+    },
+    {
+      q: "What word appeared in shimmering silver on Morgan's scroll after they returned to the tree house?",
+      opts: [
+        "PEARL",
+        "OYSTER",
+        "DOLPHIN"
+      ]
+    },
+    {
+      q: "What true thing did Jack and Annie tell their mother when they got home?",
+      opts: [
+        "That they went swimming",
+        "That their shoes never got wet",
+        "That they met two dolphins"
+      ]
+    }
+  ];
+
+  /* Answer key, kept out of the visible page: decoded only when grading. */
+  var KEY_B64 = "YmFiY2FhYmNiYWJhYmJiYmJjYmI=";
+  var TOTAL = QUESTIONS.length;
+  var LETTERS = ["a", "b", "c"];
+
+  var answers = new Array(TOTAL);
+  for (var k = 0; k < TOTAL; k++) { answers[k] = null; }
+  var graded = false;
+  var lastScore = 0;
+
+  var cards = [];
+  var optionEls = [];
+  var feedbackEls = [];
+  var els = {};
+
+  function decodeKey() {
+    var table = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    var src = KEY_B64.replace(/=+$/, "");
+    var bits = 0, buf = 0, out = "";
+    for (var i = 0; i < src.length; i++) {
+      var v = table.indexOf(src.charAt(i));
+      if (v < 0) { continue; }
+      buf = (buf << 6) | v;
+      bits += 6;
+      if (bits >= 8) {
+        bits -= 8;
+        out += String.fromCharCode((buf >> bits) & 255);
+      }
+    }
+    var result = [];
+    for (var j = 0; j < out.length; j++) {
+      result.push(LETTERS.indexOf(out.charAt(j)));
+    }
+    return result;
+  }
+
+  function makeEl(tag, className, text) {
+    var el = document.createElement(tag);
+    if (className) { el.className = className; }
+    if (text !== undefined && text !== null) { el.textContent = text; }
+    return el;
+  }
+
+  function buildCard(item, index) {
+    var card = makeEl("section", "card");
+    card.setAttribute("data-q", String(index));
+
+    var head = makeEl("div", "q-head");
+    var num = makeEl("span", "q-num", String(index + 1).length < 2 ? "0" + (index + 1) : String(index + 1));
+    num.setAttribute("aria-hidden", "true");
+    var text = makeEl("h2", "q-text", (index + 1) + ". " + item.q);
+    text.setAttribute("lang", "en");
+    head.appendChild(num);
+    head.appendChild(text);
+
+    var list = makeEl("div", "options");
+    list.setAttribute("role", "group");
+    list.setAttribute("aria-label", "Question " + (index + 1) + " options");
+
+    var buttons = [];
+    for (var oi = 0; oi < item.opts.length; oi++) {
+      (function (qIndex, optIndex) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "opt";
+        btn.setAttribute("aria-pressed", "false");
+        btn.setAttribute("data-opt", String(optIndex));
+        btn.appendChild(makeEl("span", "letter", LETTERS[optIndex]));
+        var label = makeEl("span", "opt-label", item.opts[optIndex]);
+        label.setAttribute("lang", "en");
+        btn.appendChild(label);
+        btn.appendChild(makeEl("span", "mark", ""));
+        btn.addEventListener("click", function () {
+          selectOption(qIndex, optIndex);
+        });
+        list.appendChild(btn);
+        buttons.push(btn);
+      })(index, oi);
+    }
+
+    var fb = makeEl("p", "feedback", "");
+    fb.setAttribute("aria-live", "polite");
+
+    card.appendChild(head);
+    card.appendChild(list);
+    card.appendChild(fb);
+
+    cards[index] = card;
+    optionEls[index] = buttons;
+    feedbackEls[index] = fb;
+    return card;
+  }
+
+  function render() {
+    var quiz = document.getElementById("quiz");
+    for (var i = 0; i < TOTAL; i++) {
+      quiz.appendChild(buildCard(QUESTIONS[i], i));
+    }
+  }
+
+  function answeredCount() {
+    var n = 0;
+    for (var i = 0; i < TOTAL; i++) {
+      if (answers[i] !== null) { n++; }
+    }
+    return n;
+  }
+
+  function updateProgress() {
+    var n = answeredCount();
+    if (graded) {
+      els.progressText.textContent = "채점 완료 · " + lastScore + " / " + TOTAL;
+    } else {
+      els.progressText.textContent = n + " / " + TOTAL + " 답함";
+    }
+    els.progressFill.style.width = (n / TOTAL * 100) + "%";
+  }
+
+  function selectOption(qIndex, optIndex) {
+    if (graded) { return; }
+    answers[qIndex] = optIndex;
+    var buttons = optionEls[qIndex];
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].setAttribute("aria-pressed", i === optIndex ? "true" : "false");
+      buttons[i].className = "opt";
+    }
+    updateProgress();
+  }
+
+  function messageFor(pct, correct) {
+    if (correct === TOTAL) { return "완벽해요! 돌고래 박사님이네요 🐬"; }
+    if (pct >= 90) { return "정말 잘했어요! 거의 다 맞혔어요 🌊"; }
+    if (pct >= 75) { return "좋아요! 조금만 더 하면 완벽해요 🐚"; }
+    if (pct >= 50) { return "괜찮아요! 책을 한 번 더 펼쳐 볼까요? 📖"; }
+    return "다시 읽으면서 천천히 풀어 봐요 💙";
+  }
+
+  function showResult(correct, answered) {
+    var pct = Math.round(correct / TOTAL * 100);
+    els.scoreNum.textContent = String(correct);
+    els.scoreDen.textContent = "/ " + TOTAL;
+    els.scorePct.textContent = "정답률 " + pct + "%";
+    els.scoreMsg.textContent = messageFor(pct, correct);
+    els.chipOk.textContent = "정답 " + correct;
+    els.chipNo.textContent = "오답 " + (TOTAL - correct);
+
+    var blank = TOTAL - answered;
+    if (correct === TOTAL) {
+      els.scoreNote.textContent = "20문제를 모두 맞혔어요! Wonderful!";
+    } else if (blank > 0) {
+      els.scoreNote.textContent = "선택하지 않은 " + blank + "문제는 오답으로 처리했어요. 다시 풀기로 새로 시작할 수 있어요.";
+    } else {
+      els.scoreNote.textContent = "틀린 문제는 카드에서 내 답과 정답을 함께 확인해 보세요.";
+    }
+
+    els.result.classList.add("show");
+    els.checkBtn.disabled = true;
+    els.checkBtn.textContent = "채점 완료";
+    els.progressText.textContent = "채점 완료 · " + correct + " / " + TOTAL;
+    els.progressFill.style.width = (answered / TOTAL * 100) + "%";
+
+    if (els.result.scrollIntoView) {
+      els.result.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  function grade() {
+    if (graded) { return; }
+    var answered = answeredCount();
+    if (answered === 0) {
+      toast("먼저 보기를 하나 골라 주세요");
+      return;
+    }
+
+    graded = true;
+    var key = decodeKey();
+    var correct = 0;
+    lastScore = 0;
+
+    for (var i = 0; i < TOTAL; i++) {
+      var isRight = answers[i] === key[i];
+      if (isRight) { correct++; }
+
+      var card = cards[i];
+      card.className = "card " + (isRight ? "correct" : "wrong");
+
+      var buttons = optionEls[i];
+      for (var j = 0; j < buttons.length; j++) {
+        buttons[j].disabled = true;
+        if (j === key[i]) {
+          buttons[j].className = "opt correct";
+          buttons[j].setAttribute("aria-pressed", answers[i] === j ? "true" : "false");
+          buttons[j].lastChild.textContent = "✓";
+        } else if (j === answers[i]) {
+          buttons[j].className = "opt wrong";
+          buttons[j].setAttribute("aria-pressed", "true");
+          buttons[j].lastChild.textContent = "✕";
+        } else {
+          buttons[j].className = "opt";
+          buttons[j].setAttribute("aria-pressed", "false");
+        }
+      }
+
+      var fb = feedbackEls[i];
+      if (isRight) {
+        fb.textContent = "Correct! 정답이에요.";
+      } else {
+        var mine = answers[i] === null
+          ? "선택 안 함"
+          : LETTERS[answers[i]] + ") " + QUESTIONS[i].opts[answers[i]];
+        fb.textContent = "내 답: " + mine + "  ·  정답: " + LETTERS[key[i]] + ") " + QUESTIONS[i].opts[key[i]];
+      }
+      fb.classList.add("show");
+    }
+
+    lastScore = correct;
+    showResult(correct, answered);
+  }
+
+  function resetQuiz() {
+    graded = false;
+    lastScore = 0;
+    for (var i = 0; i < TOTAL; i++) {
+      answers[i] = null;
+      cards[i].className = "card";
+      var fb = feedbackEls[i];
+      fb.textContent = "";
+      fb.classList.remove("show");
+      var buttons = optionEls[i];
+      for (var j = 0; j < buttons.length; j++) {
+        buttons[j].disabled = false;
+        buttons[j].className = "opt";
+        buttons[j].setAttribute("aria-pressed", "false");
+        buttons[j].lastChild.textContent = "";
+      }
+    }
+    els.result.classList.remove("show");
+    els.checkBtn.disabled = false;
+    els.checkBtn.textContent = "채점하기 · Check";
+    updateProgress();
+    if (els.top.scrollIntoView) {
+      els.top.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  var toastTimer = null;
+  function toast(message) {
+    els.toast.textContent = message;
+    els.toast.classList.add("show");
+    if (typeof setTimeout === "function") {
+      if (toastTimer) { clearTimeout(toastTimer); }
+      toastTimer = setTimeout(function () {
+        els.toast.classList.remove("show");
+      }, 2200);
+    }
+  }
+
+  function init() {
+    els.progress = document.getElementById("progress");
+    els.progressText = document.getElementById("progressText");
+    els.progressFill = document.getElementById("progressFill");
+    els.result = document.getElementById("result");
+    els.scoreNum = document.getElementById("scoreNum");
+    els.scoreDen = document.getElementById("scoreDen");
+    els.scorePct = document.getElementById("scorePct");
+    els.scoreMsg = document.getElementById("scoreMsg");
+    els.chipOk = document.getElementById("chipOk");
+    els.chipNo = document.getElementById("chipNo");
+    els.scoreNote = document.getElementById("scoreNote");
+    els.checkBtn = document.getElementById("checkBtn");
+    els.resetBtn = document.getElementById("resetBtn");
+    els.toast = document.getElementById("toast");
+    els.top = document.getElementById("top");
+
+    render();
+    updateProgress();
+    els.checkBtn.addEventListener("click", grade);
+    els.resetBtn.addEventListener("click", resetQuiz);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
