@@ -1265,7 +1265,7 @@ function updateDrops(dt){
 }
 
 /* ---------- 터키 이벤트 (Turkey Takeover / 킹 고블) ---------- */
-var TKD = { DUR: 90, RANGE: 96, NEXT0: 75, NEXT: [100, 170] };
+var TKD = { DUR: 90, RANGE: 110, NEXT0: 75, NEXT: [100, 170] };
 var TK = { active:false, t:0, next:TKD.NEXT0, boss:null, birds:[], cd:0, golden:false, started:0 };
 var TKSHOP = [
   { k:'maple', emo:'🍁', n:'메이플 변이', cost:30, ds:'수입 ×2.9 · 가장 수입 높은 펫 1마리에 적용' },
@@ -1283,7 +1283,7 @@ function spawnBird(nearBoss){
     x = clamp(G.player.x + rnd(-520, 520), SAFE_X + 90, WORLD_W - 90);
     y = clamp(G.player.y + rnd(-420, 420), 100, WORLD_H - 100);
   }
-  TK.birds.push({ x:x, y:y, vx:0, vy:0, face:1, bob:rnd(0, 6), hurt:0, t:rnd(0.6, 2.4) });
+  TK.birds.push({ x:x, y:y, vx:0, vy:0, face:1, bob:rnd(0, 6), hurt:0, t:rnd(0.6, 2.4), stam: 1.4 });
 }
 
 function startTurkeyEvent(){
@@ -1454,19 +1454,25 @@ function updateTurkey(dt){
     var bd = TK.birds[i];
     bd.bob += dt * 7;
     if (bd.hurt > 0) bd.hurt -= dt;
+    if (bd.stam === undefined) bd.stam = 1.4;
     var dd = dst(bd.x, bd.y, p.x, p.y);
-    if (dd < 230){
+    if (dd < 210 && bd.stam > 0){
+      /* 도망치는 중 (지치면 잠시 멈춤) */
+      bd.stam -= dt;
       var fa = Math.atan2(bd.y - p.y, bd.x - p.x);
-      bd.vx = lerp(bd.vx, Math.cos(fa) * 180, 1 - Math.pow(0.02, dt));
-      bd.vy = lerp(bd.vy, Math.sin(fa) * 180, 1 - Math.pow(0.02, dt));
+      bd.vx = lerp(bd.vx, Math.cos(fa) * 170, 1 - Math.pow(0.02, dt));
+      bd.vy = lerp(bd.vy, Math.sin(fa) * 170, 1 - Math.pow(0.02, dt));
     } else {
+      bd.stam = Math.min(1.4, bd.stam + dt * 0.55);
       bd.t -= dt;
       if (bd.t <= 0){
-        bd.t = rnd(0.8, 2.6);
+        bd.t = rnd(0.7, 1.8);
         var a2 = Math.random() * TAU;
-        bd.vx = Math.cos(a2) * 44;
-        bd.vy = Math.sin(a2) * 44;
+        bd.vx = Math.cos(a2) * 34;
+        bd.vy = Math.sin(a2) * 34;
       }
+      bd.vx *= (1 - 1.2 * dt);
+      bd.vy *= (1 - 1.2 * dt);
     }
     bd.x = clamp(bd.x + bd.vx * dt, SAFE_X + 40, WORLD_W - 60);
     bd.y = clamp(bd.y + bd.vy * dt, 80, WORLD_H - 80);
