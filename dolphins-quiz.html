@@ -87,6 +87,36 @@
   }
   .intro svg{flex:0 0 auto;}
 
+  /* ---------- 누적 성적판 ---------- */
+  .board{
+    position:relative; margin:0 0 16px; padding:13px 14px 12px; border-radius:18px;
+    color:var(--ink);
+    background:
+      radial-gradient(120% 120% at 100% 0%, rgba(15,163,184,.14), transparent 60%),
+      linear-gradient(160deg,#ffffff,#eaf7fb);
+    border:1px solid #cfe9f0;
+    box-shadow:0 6px 18px rgba(9,62,84,.06), inset 0 1px 0 #fff;
+  }
+  .board-head{display:flex; align-items:center; gap:8px;}
+  .board-title{flex:1 1 auto; font-size:12.5px; font-weight:800; color:var(--sea);}
+  .board-reset{
+    flex:0 0 auto; min-height:26px; padding:0 9px; border-radius:99px;
+    font:inherit; font-size:10.5px; font-weight:700; color:#6b8b98;
+    background:#fff; border:1px solid #d5ebf1; cursor:pointer;
+    -webkit-appearance:none; appearance:none;
+  }
+  .board-reset:hover{color:var(--sea); border-color:#a9dbe5;}
+  .board-total{margin:7px 0 0; font-size:15px; font-weight:800; color:#0a6285; letter-spacing:.01em;}
+  .board-empty{margin:6px 0 0; font-size:12px; color:var(--muted);}
+  .board-badges{display:flex; flex-wrap:wrap; gap:6px; margin-top:9px;}
+  .badge{
+    font-size:11px; font-weight:700; padding:4px 9px; border-radius:99px; line-height:1.35;
+    color:#0d4d63; background:#fff; border:1px solid #d5ebf1;
+  }
+  .badge.current{color:#fff; background:linear-gradient(145deg,#12a3b8,#0a6285); border-color:#0a6285;}
+  .board-note{margin:8px 0 0; font-size:10.5px; line-height:1.5; color:#7b97a2;}
+  .is-off{display:none !important;}
+
   /* ---------- Result ---------- */
   .result{
     display:none; margin:0 0 18px; padding:24px 18px 22px; border-radius:22px;
@@ -109,6 +139,11 @@
   .chip.ok{background:rgba(87,214,205,.26);}
   .chip.no{background:rgba(224,102,85,.30);}
   .score-note{margin:12px 0 0; font-size:12.5px; line-height:1.55; color:#c6f1f7;}
+  .score-total{
+    display:inline-block; margin:12px 0 0; padding:5px 12px; border-radius:99px;
+    font-size:12px; font-weight:800; color:#eafcff;
+    background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.26);
+  }
 
   /* ---------- Cards ---------- */
   .card{
@@ -260,6 +295,17 @@
       보기를 탭해 답을 고르세요. 정답은 <b>&nbsp;채점하기&nbsp;</b>를 누른 뒤에 보여요.
     </p>
 
+    <section class="board" id="board" aria-live="polite">
+      <div class="board-head">
+        <span class="board-title">🏆 매직트리하우스 누적 성적</span>
+        <button type="button" class="board-reset is-off" id="boardReset">누적 기록 초기화</button>
+      </div>
+      <p class="board-total is-off" id="boardTotal"></p>
+      <p class="board-empty" id="boardEmpty">첫 기록을 기다리고 있어요!</p>
+      <div class="board-badges" id="boardBadges"></div>
+      <p class="board-note is-off" id="boardNote"></p>
+    </section>
+
     <section class="result" id="result" aria-live="polite">
       <div class="score-line"><span class="score-num" id="scoreNum">0</span><span class="score-den" id="scoreDen">/ 20</span></div>
       <div><span class="score-pct" id="scorePct">정답률 0%</span></div>
@@ -269,6 +315,7 @@
         <span class="chip no" id="chipNo">오답 0</span>
       </div>
       <p class="score-note" id="scoreNote"></p>
+      <p class="score-total is-off" id="scoreTotal"></p>
     </section>
 
     <div id="quiz"></div>
@@ -465,6 +512,129 @@
   var graded = false;
   var lastScore = 0;
 
+  /* ================= 누적 성적 (localStorage · mth_quiz_scores_v1) =================
+     여러 권의 퀴즈 페이지가 같은 키를 함께 쓴다. (예: ninjas-5 / night of the ninjas) */
+  var SCORES_KEY = "mth_quiz_scores_v1";
+  var BOOK = { id: "dolphins-9", bookNum: 9, title: "Dolphins at Daybreak" };
+  var storage = { ok: true, checked: false };
+
+  function checkStorage() {
+    if (storage.checked) { return storage.ok; }
+    storage.checked = true;
+    storage.ok = false;
+    try {
+      if (typeof window === "undefined" || !window.localStorage) { return false; }
+      var probe = "__mth_quiz_probe__";
+      window.localStorage.setItem(probe, "1");
+      window.localStorage.removeItem(probe);
+      storage.ok = true;
+    } catch (e) { storage.ok = false; }
+    return storage.ok;
+  }
+
+  function readScores() {
+    var empty = { books: {} };
+    try {
+      if (typeof window === "undefined" || !window.localStorage) { return empty; }
+      var raw = window.localStorage.getItem(SCORES_KEY);
+      if (!raw) { return empty; }
+      var data = JSON.parse(raw);
+      if (!data || typeof data !== "object" || !data.books || typeof data.books !== "object") { return empty; }
+      return data;
+    } catch (e) { return empty; }
+  }
+
+  function writeScores(data) {
+    try {
+      if (typeof window === "undefined" || !window.localStorage) { return false; }
+      window.localStorage.setItem(SCORES_KEY, JSON.stringify(data));
+      return true;
+    } catch (e) { return false; }
+  }
+
+  function saveScore(correct) {
+    var data = readScores();
+    if (!data.books) { data.books = {}; }
+    data.books[BOOK.id] = {
+      bookNum: BOOK.bookNum,
+      title: BOOK.title,
+      correct: correct,
+      total: TOTAL,
+      updatedAt: new Date().toISOString()
+    };
+    return writeScores(data);
+  }
+
+  function totalsOf(data) {
+    var books = (data && data.books) || {};
+    var ids = [];
+    var correct = 0, total = 0, count = 0;
+    for (var id in books) {
+      if (Object.prototype.hasOwnProperty.call(books, id)) { ids.push(id); }
+    }
+    ids.sort(function (a, b) {
+      var A = books[a] || {}, B = books[b] || {};
+      return (Number(A.bookNum) || 999) - (Number(B.bookNum) || 999);
+    });
+    for (var i = 0; i < ids.length; i++) {
+      var b = books[ids[i]] || {};
+      var c = Number(b.correct), t = Number(b.total);
+      if (!isFinite(c) || !isFinite(t) || t <= 0 || c < 0) { continue; }
+      correct += c;
+      total += t;
+      count++;
+    }
+    return { ids: ids, correct: correct, total: total, count: count,
+             pct: total > 0 ? Math.round(correct / total * 100) : 0 };
+  }
+
+  function renderBoard() {
+    if (!els.boardTotal || !els.boardBadges) { return; }
+    var data = readScores();
+    var books = (data && data.books) || {};
+    var t = totalsOf(data);
+
+    if (t.count === 0) {
+      els.boardTotal.textContent = "";
+      els.boardTotal.classList.add("is-off");
+      els.boardEmpty.classList.remove("is-off");
+      els.boardReset.classList.add("is-off");
+    } else {
+      els.boardTotal.textContent = "총 " + t.correct + " / " + t.total + "문제 · " + t.pct + "%";
+      els.boardTotal.classList.remove("is-off");
+      els.boardEmpty.classList.add("is-off");
+      els.boardReset.classList.remove("is-off");
+    }
+
+    els.boardBadges.textContent = "";
+    for (var i = 0; i < t.ids.length; i++) {
+      var b = books[t.ids[i]] || {};
+      var bt = Number(b.total) || 0;
+      var pct = bt > 0 ? Math.round(Number(b.correct) / bt * 100) : 0;
+      var chip = makeEl("span", "badge",
+        "#" + b.bookNum + " " + b.title + " " + b.correct + "/" + b.total + " (" + pct + "%)");
+      if (t.ids[i] === BOOK.id) { chip.classList.add("current"); }
+      els.boardBadges.appendChild(chip);
+    }
+  }
+
+  function resetScores() {
+    var ok = true;
+    if (typeof window !== "undefined" && typeof window.confirm === "function") {
+      ok = window.confirm("누적 성적 기록을 모두 지울까요? 지운 기록은 되돌릴 수 없어요.");
+    }
+    if (!ok) { return; }
+    try {
+      if (window.localStorage) { window.localStorage.removeItem(SCORES_KEY); }
+    } catch (e) {}
+    renderBoard();
+    if (els.scoreTotal) {
+      els.scoreTotal.textContent = "";
+      els.scoreTotal.classList.add("is-off");
+    }
+    toast("누적 기록을 지웠어요");
+  }
+
   var cards = [];
   var optionEls = [];
   var feedbackEls = [];
@@ -610,6 +780,17 @@
       els.scoreNote.textContent = "틀린 문제는 카드에서 내 답과 정답을 함께 확인해 보세요.";
     }
 
+    if (els.scoreTotal) {
+      var tt = totalsOf(readScores());
+      if (tt.count > 0) {
+        els.scoreTotal.textContent = "🏆 누적 " + tt.correct + " / " + tt.total + "문제 · " + tt.pct + "%";
+        els.scoreTotal.classList.remove("is-off");
+      } else {
+        els.scoreTotal.textContent = "";
+        els.scoreTotal.classList.add("is-off");
+      }
+    }
+
     els.result.classList.add("show");
     els.checkBtn.disabled = true;
     els.checkBtn.textContent = "채점 완료";
@@ -671,7 +852,10 @@
     }
 
     lastScore = correct;
+    var saved = saveScore(correct);
+    renderBoard();
     showResult(correct, answered);
+    if (!saved) { toast("누적 기록을 저장하지 못했어요"); }
   }
 
   function resetQuiz() {
@@ -692,6 +876,10 @@
       }
     }
     els.result.classList.remove("show");
+    if (els.scoreTotal) {
+      els.scoreTotal.textContent = "";
+      els.scoreTotal.classList.add("is-off");
+    }
     els.checkBtn.disabled = false;
     els.checkBtn.textContent = "채점하기 · Check";
     updateProgress();
@@ -728,11 +916,25 @@
     els.resetBtn = document.getElementById("resetBtn");
     els.toast = document.getElementById("toast");
     els.top = document.getElementById("top");
+    els.boardTotal = document.getElementById("boardTotal");
+    els.boardEmpty = document.getElementById("boardEmpty");
+    els.boardBadges = document.getElementById("boardBadges");
+    els.boardReset = document.getElementById("boardReset");
+    els.boardNote = document.getElementById("boardNote");
+    els.scoreTotal = document.getElementById("scoreTotal");
 
     render();
     updateProgress();
     els.checkBtn.addEventListener("click", grade);
     els.resetBtn.addEventListener("click", resetQuiz);
+    if (els.boardReset) {
+      els.boardReset.addEventListener("click", resetScores);
+    }
+    if (!checkStorage() && els.boardNote) {
+      els.boardNote.textContent = "이 브라우저에서는 누적 기록을 저장할 수 없어요. (시크릿 모드에서는 저장이 제한될 수 있어요)";
+      els.boardNote.classList.remove("is-off");
+    }
+    renderBoard();
   }
 
   if (document.readyState === "loading") {
