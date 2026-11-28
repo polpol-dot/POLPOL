@@ -53,14 +53,14 @@
   /* ---------- 히어로 ---------- */
   .hero{
     position:relative; z-index:1; overflow:hidden;
-    display:flex; align-items:flex-end; justify-content:center;
-    min-height:clamp(300px, 46vh, 430px);
-    padding:calc(32px + env(safe-area-inset-top)) 20px 26px;
+    display:flex; align-items:flex-start; justify-content:center;
+    min-height:clamp(360px, 54vh, 500px);
+    padding:calc(30px + env(safe-area-inset-top)) 20px 26px;
     text-align:center; color:#fff; background:#050813;
   }
   .hero-art{
     position:absolute; inset:-1px;
-    background-repeat:no-repeat; background-size:cover; background-position:50% 38%;
+    background-repeat:no-repeat; background-size:cover; background-position:50% 100%;
   }
   .hero-veil{
     position:absolute; inset:0; pointer-events:none;
@@ -352,6 +352,19 @@
     box-shadow:0 6px 16px rgba(0,0,0,.20);
   }
   .score-table:hover{background:linear-gradient(145deg,#fbe9c4,#e6b063);}
+
+  /* 넓은 화면: 세로 일러스트를 가운데 두고 양옆은 밤하늘로 잇는다. */
+  @media (min-width:760px){
+    .hero{ min-height:540px; }
+    .hero-art{ left:50%; right:auto; width:min(100%,880px); transform:translateX(-50%); }
+    .hero-veil{
+      background:
+        linear-gradient(90deg,#0a0f24 0%,rgba(10,15,36,0) 20%,rgba(10,15,36,0) 80%,#0a0f24 100%),
+        linear-gradient(180deg, rgba(4,7,20,.62) 0%, rgba(4,7,20,.12) 22%, rgba(4,7,20,.10) 44%, rgba(5,8,22,.72) 76%, #0a0f24 100%),
+        radial-gradient(72% 52% at 50% 108%, rgba(229,173,85,.20), transparent 70%);
+    }
+    .hero-copy{ max-width:700px; }
+  }
 </style>
 </head>
 <body>
